@@ -1,0 +1,2990 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#121212">
+<title>Trattoria di Luki — Pop-Up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#121212;
+    --paper:#f3ecdc;
+    --paper-2:#e8ddc6;
+    --ink:#17140d;
+    --cream:#f2ede3;
+    --accent:#d4af37;
+    --accent-hi:#efd77c;
+    --accent-deep:#a9821f;
+
+    --muted:color-mix(in srgb, var(--cream) 58%, var(--bg));
+    --muted-2:color-mix(in srgb, var(--cream) 40%, var(--bg));
+    --line:color-mix(in srgb, var(--cream) 16%, transparent);
+    --line-soft:color-mix(in srgb, var(--cream) 9%, transparent);
+    --ink-soft:color-mix(in srgb, var(--ink) 62%, var(--paper));
+    --ink-muted:color-mix(in srgb, var(--ink) 50%, var(--paper));
+    --ink-on-accent:color-mix(in srgb, var(--ink) 86%, var(--accent-deep));
+    --ink-on-accent-soft:color-mix(in srgb, var(--ink) 70%, var(--accent-deep));
+
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --ease:cubic-bezier(.22,.9,.24,1);
+    --safe:env(safe-area-inset-bottom, 0px);
+    --marquee-speed:180s; /* Ticker-Geschwindigkeit: größer = langsamer */
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%;overflow-x:hidden;scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--cream);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    font-size:15px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    min-height:100dvh;
+  }
+
+  /* faint oversized word */
+  .bg-word{
+    position:fixed;
+    top:4vh;
+    right:-6vw;
+    z-index:0;
+    font-family:'Playfair Display',Georgia,serif;
+    font-style:italic;
+    font-size:clamp(12rem,30vw,26rem);
+    line-height:.7;
+    color:transparent;
+    -webkit-text-stroke:1px color-mix(in srgb, var(--accent) 5%, transparent);
+    transform:rotate(-7deg);
+    pointer-events:none;
+    user-select:none;
+  }
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:70;
+    pointer-events:none;
+    opacity:.035;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .container{
+    position:relative;
+    z-index:1;
+    width:100%;
+    max-width:760px;
+    margin-inline:auto;
+    padding-inline:22px;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead{padding-top:20px}
+
+  .topline{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    padding:10px 0 22px;
+    border-bottom:1px solid var(--line);
+    font-family:var(--mono);
+    font-size:8.5px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--muted-2);
+  }
+  .brand{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--cream);
+    font-family:'Playfair Display',Georgia,serif;
+    font-size:15px;
+    letter-spacing:0;
+    font-style:italic;
+    text-transform:none;
+    cursor:pointer;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .brand i{
+    display:grid;
+    place-items:center;
+    width:26px;height:26px;
+    border:1.5px solid var(--cream);
+    border-radius:2px;
+    background:var(--accent);
+    color:var(--ink);
+    font-style:normal;
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:-.04em;
+    box-shadow:2px 2px 0 color-mix(in srgb, var(--cream) 85%, transparent);
+  }
+  .topline__meta{color:var(--accent);white-space:nowrap}
+
+  .hero{
+    padding:30px 0 26px;
+  }
+  .hero__kicker{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:0 0 18px;
+    font-family:var(--mono);
+    font-size:8.5px;
+    letter-spacing:.24em;
+    text-transform:uppercase;
+    color:var(--accent);
+  }
+  .hero__kicker::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:repeating-linear-gradient(90deg,color-mix(in srgb, var(--accent) 50%, transparent) 0 4px,transparent 4px 8px);
+  }
+
+  .title-wrap{position:relative;display:inline-block;max-width:100%}
+  .title{
+    margin:0;
+    font-family:'Playfair Display',Georgia,serif;
+    font-weight:400;
+    font-size:clamp(3.7rem,18.5vw,7rem);
+    line-height:.84;
+    letter-spacing:-.04em;
+    color:var(--cream);
+  }
+  .title span{display:block}
+  .title em{
+    display:block;
+    font-style:italic;
+    color:var(--accent);
+    letter-spacing:-.015em;
+    padding-left:.03em;
+  }
+  .title-wrap.is-swapping .title{animation:titleSwap .5s var(--ease) both}
+  @keyframes titleSwap{
+    from{opacity:0;transform:translateY(14px)}
+    to{opacity:1;transform:none}
+  }
+
+  .squiggle{
+    display:block;
+    width:min(340px,70%);
+    height:18px;
+    margin:2px 0 0 4px;
+    overflow:visible;
+  }
+  .squiggle path{
+    fill:none;
+    stroke:var(--accent);
+    stroke-width:3;
+    stroke-linecap:round;
+    stroke-dasharray:1;
+    stroke-dashoffset:1;
+    animation:squiggleDraw 1s .28s var(--ease) forwards;
+  }
+  .title-wrap.is-swapping .squiggle path{animation:squiggleDraw 1s var(--ease) forwards}
+  @keyframes squiggleDraw{to{stroke-dashoffset:0}}
+
+  .hero__sub{
+    margin:20px 0 0;
+    max-width:46ch;
+    font-size:13.5px;
+    font-weight:400;
+    line-height:1.65;
+    color:var(--muted);
+  }
+  .hero__meta{
+    margin:16px 0 0;
+    font-family:var(--mono);
+    font-size:8.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--muted-2);
+  }
+  .hero__meta b{color:var(--accent);font-weight:400}
+
+  /* ---------- TOC ---------- */
+  .toc{
+    position:relative;
+    margin:26px 0 0;
+    border:1.5px solid var(--cream);
+    border-radius:3px;
+    background:color-mix(in srgb, var(--cream) 2%, transparent);
+    box-shadow:6px 6px 0 0 color-mix(in srgb, var(--accent) 85%, transparent);
+  }
+  .toc__tag{
+    position:absolute;
+    top:-11px;left:14px;
+    transform:rotate(-3deg);
+    padding:2px 8px;
+    border:1.5px solid var(--ink);
+    border-radius:2px;
+    background:var(--accent);
+    color:var(--ink);
+    font-family:var(--mono);
+    font-size:8px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    box-shadow:2px 2px 0 color-mix(in srgb, var(--ink) 90%, transparent);
+  }
+  .toc__row{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    padding:11px 14px;
+    border-bottom:1px dotted color-mix(in srgb, var(--cream) 24%, transparent);
+    color:var(--cream);
+    text-decoration:none;
+    transition:background .2s ease, color .2s ease;
+  }
+  .toc__row:last-child{border-bottom:0}
+  .toc__row:hover{background:color-mix(in srgb, var(--accent) 9%, transparent);color:var(--accent-hi)}
+  .toc__row:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .toc__no{
+    font-family:var(--mono);
+    font-size:9px;
+    color:var(--accent);
+  }
+  .toc__name{
+    font-size:10px;
+    font-weight:600;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .toc__dots{
+    flex:1;
+    min-width:10px;
+    border-bottom:1px dotted color-mix(in srgb, var(--cream) 30%, transparent);
+    transform:translateY(-3px);
+  }
+  .toc__arrow{font-size:12px;color:var(--accent)}
+
+  /* ---------- TOC: coming soon ---------- */
+  .toc__row.is-soon{
+    color:var(--muted-2);
+    cursor:not-allowed;
+  }
+  .toc__row.is-soon:hover{background:none;color:var(--muted-2)}
+  .toc__row.is-soon .toc__no{color:var(--muted-2)}
+  .toc__soon{
+    flex:none;
+    padding:1px 6px;
+    border:1px solid color-mix(in srgb, var(--cream) 45%, transparent);
+    border-radius:2px;
+    font-family:var(--mono);
+    font-size:6.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--accent);
+  }
+
+  /* ---------- Filter bar ---------- */
+  .filters{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:7px;
+    flex:1;
+  }
+  .filter{
+    appearance:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    border:1.5px solid var(--cream);
+    border-radius:2px;
+    background:transparent;
+    padding:9px 4px;
+    color:var(--cream);
+    font-family:'Inter',sans-serif;
+    font-size:8px;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    line-height:1.15;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    transition:background .2s ease, color .2s ease, transform .2s var(--ease), box-shadow .2s ease;
+  }
+  .filter b{
+    font-family:var(--mono);
+    font-size:7px;
+    font-weight:400;
+    color:var(--accent);
+  }
+  .filter:hover{background:color-mix(in srgb, var(--cream) 8%, transparent)}
+  .filter.is-active{
+    background:var(--accent);
+    border-color:var(--ink);
+    color:var(--ink);
+    box-shadow:3px 3px 0 color-mix(in srgb, var(--cream) 90%, transparent);
+    transform:translate(-1px,-1px);
+  }
+  .filter.is-active b{color:var(--ink)}
+  .filter:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  @media (max-width:520px){
+    .filters{grid-template-columns:1fr 1fr}
+    .filter{padding:8px 4px;font-size:7.5px}
+  }
+
+  /* ---------- Empty state ---------- */
+  .empty{
+    margin:20px 0 10px;
+    padding:30px 20px;
+    border:1.5px dashed color-mix(in srgb, var(--cream) 32%, transparent);
+    border-radius:3px;
+    text-align:center;
+  }
+  .empty h3{
+    margin:0 0 6px;
+    font-family:'Playfair Display',Georgia,serif;
+    font-weight:500;
+    font-size:1.5rem;
+    letter-spacing:-.01em;
+    color:var(--cream);
+  }
+  .empty p{
+    margin:0 auto;
+    max-width:40ch;
+    font-size:12.5px;
+    line-height:1.6;
+    color:var(--muted);
+  }
+
+  /* ---------- Marquee ---------- */
+  .marquee{
+    position:relative;
+    z-index:1;
+    overflow:hidden;
+    margin-top:26px;
+    background:var(--accent);
+    border-top:1.5px solid var(--ink);
+    border-bottom:1.5px solid var(--ink);
+    color:var(--ink);
+  }
+  .marquee__track{
+    display:flex;
+    width:max-content;
+    animation:marquee var(--marquee-speed) linear infinite;
+  }
+  .marquee__track > div{display:flex}
+  .marquee__track span{
+    display:block;
+    padding:8px 0;
+    font-family:var(--mono);
+    font-size:8.5px;
+    letter-spacing:.24em;
+    text-transform:uppercase;
+    white-space:nowrap;
+  }
+  .marquee__track span::after{
+    content:"✦";
+    padding:0 15px;
+    color:color-mix(in srgb, var(--ink) 52%, var(--accent));
+  }
+  @keyframes marquee{to{transform:translateX(-50%)}}
+
+  /* ---------- Sticky filter bar ---------- */
+  .bar{
+    position:sticky;
+    top:0;
+    z-index:30;
+    background:rgba(18,18,18,.92);
+    -webkit-backdrop-filter:blur(16px);
+    backdrop-filter:blur(16px);
+    border-top:1.5px solid var(--cream);
+    border-bottom:1.5px solid var(--cream);
+    margin-top:30px;
+  }
+  .bar[hidden]{display:none}
+  .bar__inner{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding-block:10px;
+  }
+  .bar__label{
+    font-family:var(--mono);
+    font-size:8px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--muted-2);
+    white-space:nowrap;
+  }
+
+  /* ---------- Chapters ---------- */
+  main{padding-bottom:80px}
+  .chapter{
+    padding-top:0;
+    margin-top:50px;
+    border-top:0;
+    scroll-margin-top:86px;
+    animation:riseIn .45s var(--ease) both;
+  }
+  .chapter:first-child{margin-top:36px}
+  .chapter[hidden]{display:none}
+  @keyframes riseIn{
+    from{opacity:0;transform:translateY(12px)}
+    to{opacity:1;transform:none}
+  }
+
+  .chapter__head{
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    align-items:center;
+    gap:14px;
+    padding:9px 13px;
+    margin-bottom:21px;
+    border:1.5px solid var(--ink);
+    border-radius:2px;
+    background:var(--accent);
+    color:var(--ink);
+    box-shadow:4px 4px 0 0 var(--ink);
+    transform:rotate(-.4deg);
+  }
+  .chapter__num{
+    font-family:'Playfair Display',Georgia,serif;
+    font-size:clamp(2.2rem,9.5vw,3.3rem);
+    line-height:.78;
+    color:transparent;
+    -webkit-text-stroke:1.2px var(--ink);
+    letter-spacing:-.04em;
+  }
+  .chapter__title{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    font-size:clamp(.9rem,4vw,1.15rem);
+    font-weight:800;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+    line-height:1.15;
+    color:var(--ink);
+  }
+  .chapter__sub{
+    margin:4px 0 0;
+    font-family:var(--mono);
+    font-size:7.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ink-on-accent-soft);
+  }
+  .chapter__count{
+    display:grid;
+    place-items:center;
+    width:32px;height:32px;
+    border:1.5px solid var(--ink);
+    border-radius:50%;
+    font-family:var(--mono);
+    font-size:10px;
+    color:var(--ink);
+    transform:rotate(7deg);
+  }
+
+  /* ---------- Dish cards (paper) ---------- */
+  .dishes{display:grid;gap:16px;padding-bottom:14px}
+
+  .card{
+    position:relative;
+    display:block;
+    padding:16px 17px 17px;
+    border:2px solid var(--ink);
+    border-radius:3px;
+    background:var(--paper);
+    color:var(--ink);
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    box-shadow:6px 6px 0 0 color-mix(in srgb, var(--accent) 90%, transparent);
+    transition:transform .28s var(--ease), box-shadow .28s ease, background .28s ease;
+  }
+  .card:nth-child(odd){transform:rotate(-.75deg)}
+  .card:nth-child(even){transform:rotate(.55deg)}
+  .card:active{transform:scale(.992)}
+
+  .card input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+  .card:focus-within{outline:2px solid var(--accent);outline-offset:3px}
+
+  .card__top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:9px;
+  }
+  .card__no{
+    display:grid;
+    place-items:center;
+    width:25px;height:25px;
+    border-radius:2px;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--mono);
+    font-size:9px;
+    letter-spacing:.04em;
+  }
+  .card__state{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-family:var(--mono);
+    font-size:7.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+  }
+  .card__state .pick{display:inline}
+  .card__state .picked{display:none;color:var(--ink);font-weight:600}
+  .card__state::before{
+    content:"+";
+    display:grid;
+    place-items:center;
+    width:17px;height:17px;
+    border:1.5px solid var(--ink);
+    border-radius:50%;
+    font-size:11px;
+    line-height:1;
+    color:var(--ink);
+  }
+
+  .card__name{
+    margin:0 0 5px;
+    padding-right:8px;
+    font-family:'Playfair Display',Georgia,serif;
+    font-weight:600;
+    font-size:1.28rem;
+    line-height:1.22;
+    letter-spacing:-.01em;
+    color:var(--ink);
+  }
+  .card__desc{
+    margin:0;
+    font-size:12.5px;
+    line-height:1.6;
+    color:var(--ink-soft);
+    max-width:52ch;
+  }
+  .card__meta{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:6px 8px;
+    margin-top:12px;
+  }
+
+  .tag{
+    display:inline-block;
+    padding:2px 7px;
+    border:1.5px solid var(--ink);
+    border-radius:2px;
+    background:transparent;
+    color:var(--ink);
+    font-family:var(--mono);
+    font-size:7.5px;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    line-height:1.5;
+  }
+  .tag--hot{
+    background:var(--ink);
+    color:var(--accent);
+  }
+  .allerg{
+    font-family:var(--mono);
+    font-size:7.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+    line-height:1.5;
+  }
+  .allerg::before{content:"// ";color:color-mix(in srgb, var(--ink) 40%, transparent)}
+
+  /* selected = gold ticket */
+  .card:has(input:checked){
+    background:linear-gradient(150deg,var(--accent-hi),var(--accent) 62%,color-mix(in srgb, var(--accent) 72%, var(--accent-deep)));
+    box-shadow:6px 6px 0 0 var(--paper);
+  }
+  .card:has(input:checked) .card__state{color:var(--ink)}
+  .card:has(input:checked) .card__state::before{content:"✓";background:var(--ink);color:var(--accent);border-color:var(--ink)}
+  .card:has(input:checked) .card__state .pick{display:none}
+  .card:has(input:checked) .card__state .picked{display:inline}
+  .card:has(input:checked) .card__desc{color:var(--ink-on-accent)}
+  .card:has(input:checked) .allerg{color:var(--ink-on-accent-soft)}
+  .card:has(input:checked) .allerg::before{color:color-mix(in srgb, var(--ink) 45%, transparent)}
+  .card:has(input:checked) .tag{background:var(--ink);color:var(--accent)}
+  .card:has(input:checked) .card__no{background:var(--paper);color:var(--ink);border:1.5px solid var(--ink)}
+
+  @media (hover:hover){
+    .card:hover{
+      transform:rotate(0) translate(-2px,-2px);
+      box-shadow:8px 8px 0 0 color-mix(in srgb, var(--accent) 95%, transparent);
+    }
+    .card:has(input:checked):hover{box-shadow:8px 8px 0 0 var(--paper)}
+  }
+
+  /* ---------- Footer ---------- */
+  .foot{
+    position:relative;
+    z-index:1;
+    border-top:1.5px solid var(--cream);
+    margin-top:10px;
+    padding:26px 0 44px;
+  }
+  .foot__inner{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:20px;
+  }
+  .foot__big{
+    margin:0;
+    font-family:'Playfair Display',Georgia,serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:clamp(1.8rem,8vw,2.9rem);
+    line-height:.95;
+    letter-spacing:-.02em;
+    color:var(--accent);
+  }
+  .foot__note{
+    margin:0;
+    max-width:20ch;
+    font-family:var(--mono);
+    font-size:7.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    line-height:1.9;
+    color:var(--muted-2);
+    text-align:right;
+  }
+
+  /* ---------- Cart ticket ---------- */
+  .cart{
+    position:fixed;
+    left:14px;right:14px;
+    bottom:calc(14px + var(--safe));
+    z-index:40;
+    max-width:620px;
+    margin-inline:auto;
+    padding:9px 9px 9px 16px;
+    border:2px solid var(--ink);
+    border-radius:3px;
+    background:var(--paper);
+    color:var(--ink);
+    box-shadow:6px 6px 0 0 var(--accent), 0 20px 50px -18px rgba(0,0,0,.9);
+    display:flex;
+    align-items:center;
+    gap:12px;
+    transform:translateY(calc(100% + 30px));
+    visibility:hidden;
+    opacity:0;
+    transition:transform .45s var(--ease), opacity .3s ease, visibility .45s;
+  }
+  .cart.is-visible{transform:none;visibility:visible;opacity:1}
+  .cart__info{flex:1;min-width:0}
+  .cart__label{
+    display:block;
+    font-family:var(--mono);
+    font-size:7.5px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+  }
+  .cart__count{
+    display:block;
+    margin-top:1px;
+    font-family:'Inter',sans-serif;
+    font-size:12.5px;
+    font-weight:800;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--ink);
+    line-height:1.25;
+  }
+  .cart__names{
+    display:block;
+    margin-top:1px;
+    font-family:var(--mono);
+    font-size:8px;
+    letter-spacing:.03em;
+    color:var(--ink-muted);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .cart__btn{
+    appearance:none;
+    flex:none;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:13px 14px;
+    border:1.5px solid var(--ink);
+    border-radius:2px;
+    background:var(--ink);
+    color:var(--accent);
+    font-family:'Inter',sans-serif;
+    font-size:9.5px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    transition:transform .2s var(--ease), background .2s ease, color .2s ease;
+  }
+  .cart__btn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:square}
+  .cart__btn:active{transform:scale(.96)}
+  .cart__btn:hover{background:var(--accent);color:var(--ink)}
+  .cart__btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+  /* ---------- Receipt modal ---------- */
+  .overlay{
+    position:fixed;
+    inset:0;
+    z-index:50;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding-top:40px;
+    background:rgba(6,6,5,.72);
+    -webkit-backdrop-filter:blur(7px);
+    backdrop-filter:blur(7px);
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .3s ease, visibility .3s;
+  }
+  .overlay.is-open{opacity:1;visibility:visible}
+
+  .receipt{
+    position:relative;
+    width:100%;
+    max-width:620px;
+    max-height:92dvh;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    padding:0 20px calc(24px + var(--safe));
+    border:1.5px solid var(--ink);
+    border-bottom:0;
+    border-radius:8px 8px 0 0;
+    background:var(--paper);
+    color:var(--ink);
+    box-shadow:0 -24px 70px -20px rgba(0,0,0,.85);
+    transform:translateY(100%);
+    transition:transform .45s var(--ease);
+  }
+  .overlay.is-open .receipt{transform:none}
+
+  .receipt__bar{
+    position:sticky;
+    top:0;
+    z-index:2;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin:0 -20px;
+    padding:10px 20px;
+    border-bottom:1.5px solid var(--ink);
+    background:var(--accent);
+    font-family:var(--mono);
+    font-size:7.5px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+  }
+  .receipt__bar span{color:var(--ink);font-weight:600}
+  .receipt__close{
+    appearance:none;
+    display:grid;
+    place-items:center;
+    width:30px;height:30px;
+    border:1.5px solid var(--ink);
+    border-radius:2px;
+    background:transparent;
+    color:var(--ink);
+    font-size:15px;
+    line-height:1;
+    cursor:pointer;
+  }
+  .receipt__close:active{background:color-mix(in srgb, var(--ink) 8%, transparent)}
+
+  .receipt__title{
+    margin:22px 0 4px;
+    font-family:'Playfair Display',Georgia,serif;
+    font-weight:500;
+    font-size:clamp(2.2rem,10vw,3.1rem);
+    line-height:.95;
+    letter-spacing:-.03em;
+    text-transform:uppercase;
+  }
+  .receipt__title em{
+    display:block;
+    margin-top:4px;
+    font-style:italic;
+    font-size:.46em;
+    letter-spacing:0;
+    text-transform:none;
+    color:var(--accent-deep);
+  }
+  .receipt__count{
+    margin:10px 0 0;
+    font-family:var(--mono);
+    font-size:8.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+  }
+
+  .order{
+    list-style:none;
+    margin:18px 0 22px;
+    padding:0;
+    border-top:1.5px solid var(--ink);
+  }
+  .order__item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 0;
+    border-bottom:1px dashed color-mix(in srgb, var(--ink) 35%, transparent);
+    animation:riseIn .3s var(--ease) both;
+  }
+  .order__idx{
+    flex:none;
+    width:22px;
+    font-family:var(--mono);
+    font-size:8.5px;
+    color:var(--accent-deep);
+  }
+  .order__name{
+    flex:1;
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    line-height:1.4;
+    color:var(--ink);
+  }
+  .order__dots{
+    flex:0 1 40px;
+    border-bottom:1px dotted color-mix(in srgb, var(--ink) 40%, transparent);
+    transform:translateY(-3px);
+  }
+  .order__remove{
+    appearance:none;
+    flex:none;
+    display:grid;
+    place-items:center;
+    width:27px;height:27px;
+    border:1.5px solid var(--ink);
+    border-radius:2px;
+    background:transparent;
+    color:var(--ink);
+    font-size:14px;
+    line-height:1;
+    cursor:pointer;
+    transition:background .2s ease, color .2s ease;
+  }
+  .order__remove:hover{background:var(--ink);color:var(--accent)}
+
+  .field{margin-bottom:16px}
+  .field label{
+    display:block;
+    margin-bottom:4px;
+    font-family:var(--mono);
+    font-size:8px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+  }
+  .field input{
+    width:100%;
+    padding:5px 0 8px;
+    border:0;
+    border-bottom:1.5px solid var(--ink);
+    border-radius:0;
+    background:none;
+    color:var(--ink);
+    font-family:'Playfair Display',Georgia,serif;
+    font-size:1.4rem;
+    outline:none;
+    transition:border-color .2s ease;
+    -webkit-appearance:none;
+  }
+  .field input::placeholder{color:color-mix(in srgb, var(--ink) 40%, var(--paper));font-style:italic}
+  .field input:focus{border-bottom-color:var(--accent-deep)}
+  .field.is-invalid input{border-bottom-color:#b3402c}
+  .field__error{
+    display:none;
+    margin:6px 0 0;
+    font-family:var(--mono);
+    font-size:8px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:#b3402c;
+  }
+  .field.is-invalid .field__error{display:block}
+
+  .receipt__meta{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    margin:0 0 12px;
+    border-top:1.5px solid var(--ink);
+    border-bottom:1.5px solid var(--ink);
+  }
+  .receipt__meta > div{padding:9px 0}
+  .receipt__meta > div + div{padding-left:14px;border-left:1px dashed color-mix(in srgb, var(--ink) 40%, transparent)}
+  .receipt__meta span{
+    display:block;
+    margin-bottom:2px;
+    font-family:var(--mono);
+    font-size:7.5px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+  }
+  .receipt__meta b{
+    display:block;
+    font-size:9.5px;
+    font-weight:700;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    line-height:1.4;
+    color:var(--ink);
+  }
+  .receipt__note{
+    margin:0 0 16px;
+    font-size:11px;
+    line-height:1.6;
+    color:#5d5647;
+    max-width:46ch;
+  }
+
+  .send{
+    appearance:none;
+    width:100%;
+    padding:16px;
+    border:1.5px solid var(--ink);
+    border-radius:2px;
+    background:var(--accent);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:10.5px;
+    font-weight:800;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    cursor:pointer;
+    box-shadow:4px 4px 0 0 var(--ink);
+    transition:transform .18s var(--ease), box-shadow .18s ease, background .2s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .send:hover{background:var(--accent-hi)}
+  .send:active{transform:translate(3px,3px);box-shadow:1px 1px 0 0 var(--ink)}
+  .send:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+  .send__hint{
+    margin:12px 0 0;
+    font-family:var(--mono);
+    font-size:7.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    text-align:center;
+    color:var(--ink-muted);
+  }
+  .send__hint[hidden]{display:none}
+
+  .barcode{
+    height:42px;
+    margin:16px 0 0;
+    background:
+      repeating-linear-gradient(90deg,
+        var(--ink) 0 2px, transparent 2px 4px,
+        var(--ink) 4px 5px, transparent 5px 10px,
+        var(--ink) 10px 13px, transparent 13px 15px,
+        var(--ink) 15px 16px, transparent 16px 21px);
+    opacity:.85;
+  }
+  .barcode__no{
+    margin:4px 0 0;
+    font-family:var(--mono);
+    font-size:7px;
+    letter-spacing:.4em;
+    text-align:center;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+  }
+
+  @media (min-width:760px){
+    .container{padding-inline:30px}
+    .hero{padding-top:38px}
+    .receipt{
+      max-width:560px;
+      border-radius:4px;
+      border-bottom:1.5px solid var(--ink);
+      padding-inline:28px;
+      transform:translateY(18px) scale(.985);
+      opacity:0;
+      transition:transform .4s var(--ease), opacity .3s ease;
+    }
+    .receipt__bar{margin-inline:-28px;padding-inline:28px}
+    .overlay{align-items:center;padding:24px}
+    .overlay.is-open .receipt{transform:none;opacity:1}
+    .dishes{grid-template-columns:1fr 1fr;gap:18px}
+    .card__name{font-size:1.2rem}
+    .card__desc{font-size:12px}
+    .bar__inner{gap:22px}
+    .foot__inner{padding-inline:0}
+  }
+
+  @media (max-width:600px){
+    .bg-word{display:none}
+  }
+
+  @media (max-width:400px){
+    .container{padding-inline:17px}
+    .bar__label{display:none}
+    .card{padding:14px 14px 15px}
+    .card__name{font-size:1.18rem}
+    .card__desc{font-size:12px}
+    .cart{left:10px;right:10px;padding-left:13px}
+    .cart__btn{padding:12px}
+    .topline{font-size:7.5px;letter-spacing:.12em}
+    .hide-sm{display:none}
+    .receipt{padding-inline:16px}
+    .receipt__bar{margin-inline:-16px;padding-inline:16px}
+  }
+
+  /* ---------- Chef access ---------- */
+  .chef-link{
+    appearance:none;
+    display:inline;
+    margin:0;
+    padding:0;
+    border:0;
+    background:none;
+    color:var(--accent);
+    font-family:var(--mono);
+    font-size:7.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    cursor:pointer;
+    text-decoration:underline;
+    text-underline-offset:3px;
+  }
+  .chef-link:hover{color:var(--accent-hi)}
+  .chef-link:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+  .pin-overlay{
+    position:fixed;
+    inset:0;
+    z-index:80;
+    display:grid;
+    place-items:center;
+    padding:24px;
+    background:rgba(6,6,5,.8);
+    -webkit-backdrop-filter:blur(8px);
+    backdrop-filter:blur(8px);
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .25s ease, visibility .25s;
+  }
+  .pin-overlay.is-open{opacity:1;visibility:visible}
+  .pin{
+    position:relative;
+    width:100%;
+    max-width:340px;
+    padding:22px 20px 20px;
+    border:2px solid var(--ink);
+    border-radius:3px;
+    background:var(--paper);
+    color:var(--ink);
+    box-shadow:8px 8px 0 var(--accent);
+  }
+  .pin__eyebrow{
+    margin:0 0 6px;
+    font-family:var(--mono);
+    font-size:7.5px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--accent-deep);
+  }
+  .pin__title{
+    margin:0 0 14px;
+    font-family:'Playfair Display',Georgia,serif;
+    font-weight:500;
+    font-size:1.7rem;
+    line-height:1;
+    letter-spacing:-.02em;
+  }
+  .pin__field{display:flex;gap:8px}
+  .pin__field input{
+    flex:1;
+    min-width:0;
+    padding:12px;
+    border:1.5px solid var(--ink);
+    border-radius:2px;
+    background:transparent;
+    color:var(--ink);
+    font-family:var(--mono);
+    font-size:1.1rem;
+    letter-spacing:.42em;
+    text-align:center;
+    outline:none;
+  }
+  .pin__field input:focus{
+    border-color:var(--accent-deep);
+    box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  .pin__go{
+    appearance:none;
+    padding:12px 14px;
+    border:1.5px solid var(--ink);
+    border-radius:2px;
+    background:var(--accent);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    cursor:pointer;
+  }
+  .pin__go:hover{background:var(--accent-hi)}
+  .pin__error{
+    display:none;
+    margin:10px 0 0;
+    font-family:var(--mono);
+    font-size:7.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:#b3402c;
+  }
+  .pin.is-invalid .pin__error{display:block}
+  .pin.is-invalid{animation:shake .3s ease}
+  @keyframes shake{
+    0%,100%{transform:none}
+    25%{transform:translateX(-6px)}
+    75%{transform:translateX(6px)}
+  }
+  .pin__close{
+    position:absolute;
+    top:10px;
+    right:10px;
+    appearance:none;
+    display:grid;
+    place-items:center;
+    width:28px;height:28px;
+    border:1.5px solid var(--ink);
+    border-radius:2px;
+    background:transparent;
+    color:var(--ink);
+    font-size:14px;
+    line-height:1;
+    cursor:pointer;
+  }
+
+  .chef-overlay{
+    position:fixed;
+    inset:0;
+    z-index:75;
+    padding:20px 14px calc(30px + var(--safe));
+    background:rgba(6,6,5,.84);
+    -webkit-backdrop-filter:blur(8px);
+    backdrop-filter:blur(8px);
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .3s ease, visibility .3s;
+  }
+  .chef-overlay.is-open{opacity:1;visibility:visible}
+  .chef-panel{
+    width:100%;
+    max-width:720px;
+    margin:0 auto;
+    border:2px solid var(--ink);
+    border-radius:3px;
+    background:var(--paper);
+    color:var(--ink);
+    box-shadow:8px 8px 0 var(--accent);
+  }
+  .chef-panel__bar{
+    position:sticky;
+    top:0;
+    z-index:2;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:10px 16px;
+    border-bottom:1.5px solid var(--ink);
+    background:var(--accent);
+    font-family:var(--mono);
+    font-size:7.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ink);
+  }
+  .chef-actions{display:flex;gap:7px}
+  .chef-btn{
+    appearance:none;
+    padding:7px 10px;
+    border:1.5px solid var(--ink);
+    border-radius:2px;
+    background:transparent;
+    color:var(--ink);
+    font-family:var(--mono);
+    font-size:7px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    cursor:pointer;
+  }
+  .chef-btn:hover{background:var(--ink);color:var(--accent)}
+  .chef-panel__body{padding:18px 16px 26px}
+  .chef-intro{
+    margin:0;
+    max-width:52ch;
+    font-size:12px;
+    line-height:1.6;
+    color:var(--ink-soft);
+  }
+  .chef-release{
+    margin:18px 0 0;
+    padding:13px 13px 14px;
+    border:1.5px dashed color-mix(in srgb, var(--ink) 38%, transparent);
+    border-radius:2px;
+    background:color-mix(in srgb, var(--accent) 9%, transparent);
+  }
+  .chef-release h3{margin:0}
+  .chef-release__text{
+    margin:6px 0 0;
+    max-width:58ch;
+    font-size:11px;
+    line-height:1.55;
+    color:var(--ink-soft);
+  }
+  .chef-release__row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:10px;
+  }
+  .chef-release__row input,
+  .chef-release__row select{
+    flex:1;
+    min-width:150px;
+    padding:9px 10px;
+    border:1.5px solid var(--ink);
+    border-radius:2px;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--mono);
+    font-size:11px;
+    outline:none;
+  }
+  .chef-release__row input:focus,
+  .chef-release__row select:focus{
+    border-color:var(--accent-deep);
+    box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  .chef-btn--solid{background:var(--accent)}
+  .chef-btn--solid:hover{background:var(--ink);color:var(--accent)}
+  .chef-release__url{
+    margin:10px 0 0;
+    font-family:var(--mono);
+    font-size:7.5px;
+    line-height:1.55;
+    color:var(--ink-muted);
+    word-break:break-all;
+  }
+  .chef-release__ok{
+    margin:8px 0 0;
+    font-family:var(--mono);
+    font-size:7.5px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:#2f6b3a;
+  }
+  .chef-release__ok[hidden]{display:none}
+  .chef-release__warn{
+    margin:8px 0 0;
+    padding:7px 9px;
+    border-left:3px solid #b3402c;
+    background:color-mix(in srgb, #b3402c 10%, transparent);
+    font-size:10px;
+    line-height:1.5;
+    color:#7a2c1e;
+  }
+  .chef-cat{
+    margin:24px 0 0;
+    padding-top:12px;
+    border-top:1.5px solid var(--ink);
+  }
+  .chef-cat__head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .chef-cat h3{
+    margin:0;
+    font-family:'Playfair Display',Georgia,serif;
+    font-weight:600;
+    font-size:1.3rem;
+    letter-spacing:-.01em;
+  }
+  .chef-cat__count{
+    font-family:var(--mono);
+    font-size:7.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+  }
+  .chef-dish{
+    margin:12px 0 0;
+    padding:12px 12px 14px;
+    border:1.5px solid color-mix(in srgb, var(--ink) 30%, transparent);
+    border-radius:2px;
+    background:color-mix(in srgb, var(--paper) 55%, #fff);
+  }
+  .chef-dish h4{
+    margin:0;
+    font-family:'Playfair Display',Georgia,serif;
+    font-weight:600;
+    font-size:1.05rem;
+    line-height:1.25;
+    letter-spacing:-.01em;
+  }
+  .chef-dish__meta{
+    margin:2px 0 0;
+    font-family:var(--mono);
+    font-size:7px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent-deep);
+  }
+  .chef-dish h5{
+    margin:11px 0 4px;
+    font-family:var(--mono);
+    font-size:7px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+  }
+  .chef-dish ul,.chef-dish ol{
+    margin:0;
+    padding-left:17px;
+    font-size:11.5px;
+    line-height:1.55;
+    color:var(--ink-soft);
+  }
+  .chef-dish li{margin-bottom:3px}
+  .chef-dish li::marker{color:var(--accent-deep)}
+  .chef-foot{
+    margin:22px 0 0;
+    padding-top:12px;
+    border-top:1px dashed color-mix(in srgb, var(--ink) 35%, transparent);
+    font-family:var(--mono);
+    font-size:7px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+  }
+
+  /* ---------- Chef-Editor ---------- */
+  .chef-editor{
+    margin:0 0 16px;
+    border:1.5px solid var(--ink);
+    border-radius:2px;
+    background:color-mix(in srgb, var(--paper) 62%, #fff);
+  }
+  .chef-editor > summary{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:11px 12px;
+    list-style:none;
+    cursor:pointer;
+    font-family:var(--mono);
+    font-size:8px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+  }
+  .chef-editor > summary::-webkit-details-marker{display:none}
+  .chef-editor > summary::after{
+    content:"＋";
+    font-family:var(--mono);
+    font-size:12px;
+    line-height:1;
+    color:var(--accent-deep);
+  }
+  .chef-editor[open] > summary::after{content:"−"}
+  .chef-editor__body{
+    padding:0 12px 14px;
+    border-top:1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  }
+  .chef-editor__note{
+    margin:10px 0 0;
+    font-size:10.5px;
+    line-height:1.5;
+    color:var(--ink-soft);
+  }
+  .chef-editor__actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin:10px 0 0;
+  }
+  .chef-editor__list{margin-top:4px}
+  .editor-cat{
+    margin-top:11px;
+    padding-top:8px;
+    border-top:1px dashed color-mix(in srgb, var(--ink) 28%, transparent);
+  }
+  .editor-cat__head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .editor-cat__head strong{
+    display:block;
+    font-family:'Playfair Display',Georgia,serif;
+    font-size:12.5px;
+    line-height:1.2;
+  }
+  .editor-cat__head span{
+    display:block;
+    margin-top:2px;
+    font-family:var(--mono);
+    font-size:6.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+  }
+  .editor-cat__actions{display:flex;gap:4px;flex-shrink:0}
+  .editor-dish{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:5px 0;
+    border-top:1px dotted color-mix(in srgb, var(--ink) 20%, transparent);
+    font-size:11px;
+    line-height:1.35;
+  }
+  .editor-dish > span{flex:1;min-width:0}
+  .editor-dish small{
+    flex-shrink:0;
+    font-family:var(--mono);
+    font-size:6px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--accent-deep);
+  }
+  .editor-dish .chef-btn,
+  .editor-cat__actions .chef-btn{
+    padding:4px 6px;
+    font-size:6px;
+  }
+  .editor-empty{
+    margin:6px 0 0;
+    font-size:10px;
+    color:var(--ink-muted);
+  }
+  .editor-form{
+    margin:12px 0 0;
+    padding:10px;
+    border:1.5px solid var(--ink);
+    background:var(--paper);
+  }
+  .editor-form label{
+    display:block;
+    margin-top:7px;
+    font-family:var(--mono);
+    font-size:6.5px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+  }
+  .editor-form input,
+  .editor-form select,
+  .editor-form textarea{
+    display:block;
+    width:100%;
+    margin-top:3px;
+    padding:7px 8px;
+    border:1px solid color-mix(in srgb, var(--ink) 45%, transparent);
+    border-radius:2px;
+    background:#fff;
+    color:var(--ink);
+    font-family:var(--mono);
+    font-size:10px;
+    line-height:1.45;
+    outline:none;
+  }
+  .editor-form textarea{resize:vertical;min-height:56px}
+  .editor-form input:focus,
+  .editor-form select:focus,
+  .editor-form textarea:focus{
+    border-color:var(--accent-deep);
+    box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+  .editor-form__row{display:flex;gap:7px;flex-wrap:wrap}
+  .editor-form__row > label{flex:1;min-width:130px}
+  .editor-form__actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .editor-form__actions .chef-btn{padding:6px 9px;font-size:6.5px}
+  .editor-form [hidden]{display:none !important}
+  .editor-sep{height:1px;margin:8px 0;background:color-mix(in srgb, var(--ink) 18%, transparent)}
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{
+      animation-duration:.001ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:.001ms !important;
+    }
+    .card,.card:nth-child(odd),.card:nth-child(even){transform:none}
+    .marquee__track{animation:none}
+  }
+
+  @media print{
+    @page{margin:14mm}
+    body{background:#fff;color:#000}
+    body::after{display:none !important}
+    .bg-word,.masthead,.marquee,.bar,main,.foot,.cart,.overlay,.pin-overlay,.no-print{display:none !important}
+    #chefOverlay{
+      position:static;
+      display:block !important;
+      opacity:1;
+      visibility:visible;
+      padding:0;
+      background:#fff;
+      overflow:visible;
+      z-index:auto;
+    }
+    #chefOverlay .chef-panel{
+      max-width:none;
+      border:0;
+      box-shadow:none;
+      background:#fff;
+    }
+    #chefOverlay .chef-panel__bar{
+      position:static;
+      border-bottom:1px solid #000;
+      background:#fff;
+    }
+    #chefOverlay .chef-actions{display:none}
+    .chef-editor{display:none !important}
+    .chef-dish{
+      break-inside:avoid;
+      page-break-inside:avoid;
+      border-color:#999;
+      background:#fff;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="bg-word" id="bgWord" aria-hidden="true">Luki</div>
+
+<header class="masthead container">
+  <div class="topline">
+    <span class="brand" id="brandBtn"><i>T&amp;L</i> Pop-Up</span>
+    <span class="topline__meta"><span class="hide-sm">WG-Küche · </span><span id="clipLine">Datum folgt · ab 19 Uhr</span></span>
+  </div>
+
+  <div class="hero">
+    <p class="hero__kicker" id="heroKicker">Aus Liebe zur Italienischen Küche</p>
+    <div class="title-wrap" id="titleWrap">
+      <h1 class="title">
+        <span id="titleMain">Trattoria</span>
+        <em id="titleAccent">di Luki</em>
+      </h1>
+      <svg class="squiggle" viewBox="0 0 300 16" aria-hidden="true">
+        <path pathLength="1" d="M2 10 C 16 3, 30 14, 46 9 S 74 3, 90 9 S 118 14, 134 8 S 162 3, 178 9 S 206 14, 222 8 S 250 3, 266 9 S 288 13, 298 8"/>
+      </svg>
+    </div>
+
+    <p class="hero__sub" id="subtitle">Handgemachte Pasta, langsam geschmorte Ragùs und italienische Klassiker – gekocht in der WG.</p>
+    <p class="hero__meta" id="heroMeta"><b>02</b> Kapitel · <b>14</b> Gerichte · <b>01</b> Küche</p>
+
+    <nav class="toc" id="toc" aria-label="Kategorien">
+      <span class="toc__tag">Inhalt</span>
+    </nav>
+  </div>
+</header>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track" id="marqueeTrack"></div>
+</div>
+
+<div class="bar" id="filterBar">
+  <div class="container bar__inner">
+    <span class="bar__label">Filtro</span>
+    <div class="filters" role="group" aria-label="Nach Ernährungsweise filtern">
+      <button class="filter is-active" type="button" data-diet="all" aria-pressed="true">Alle <b data-count="all">14</b></button>
+      <button class="filter" type="button" data-diet="vegan" aria-pressed="false">Piatti vegani <b data-count="vegan">0</b></button>
+      <button class="filter" type="button" data-diet="veg" aria-pressed="false">Piatti vegetariani <b data-count="veg">7</b></button>
+      <button class="filter" type="button" data-diet="meat" aria-pressed="false">Le carni <b data-count="meat">7</b></button>
+    </div>
+  </div>
+</div>
+
+<main class="container" id="menu" aria-live="polite"></main>
+
+<footer class="foot">
+  <div class="container foot__inner">
+    <p class="foot__big">Guten<br>Appetit.</p>
+    <p class="foot__note">Kein Restaurant.<br>Nur eine WG mit<br>Ambitionen.<br><button class="chef-link" type="button" id="chefLink">Chef-Zugang</button></p>
+  </div>
+</footer>
+
+<aside class="cart" id="cart" aria-hidden="true">
+  <div class="cart__info">
+    <span class="cart__label">Dein Ticket</span>
+    <span class="cart__count" id="cartCount">01 Gericht ausgewählt</span>
+    <span class="cart__names" id="cartNames"></span>
+  </div>
+  <button class="cart__btn" type="button" id="openCart">
+    Bestellen
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+  </button>
+</aside>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="receiptTitle" aria-hidden="true">
+  <div class="receipt" role="document">
+    <div class="receipt__bar">
+      <span>Bestellschein · WG-Pop-Up</span>
+      <button class="receipt__close" type="button" id="closeCart" aria-label="Schließen">×</button>
+    </div>
+
+    <h2 class="receipt__title" id="receiptTitle">Bestellung<em id="receiptWhen">für morgen</em></h2>
+    <p class="receipt__count" id="receiptCount">01 Gericht</p>
+
+    <ul class="order" id="orderList"></ul>
+
+    <div class="field" id="nameField">
+      <label for="name">Dein Name</label>
+      <input id="name" name="name" type="text" autocomplete="name" placeholder="Wie heißt du?" enterkeyhint="done">
+      <p class="field__error" id="nameError">Bitte gib deinen Namen an.</p>
+    </div>
+
+    <div class="receipt__meta">
+      <div><span>Menü</span><b id="checkoutMenu">—</b></div>
+      <div><span>Auswahl</span><b id="checkoutCount">—</b></div>
+    </div>
+    <p class="receipt__note">Deine Auswahl wird als WhatsApp-Nachricht an den Gastgeber gesendet. Bezahlt wird bar am Abend.</p>
+
+    <button class="send" type="button" id="send">Bestellung per WhatsApp senden</button>
+    <p class="send__hint" id="sendHint" hidden>Demo: Trage im Script deine WhatsApp-Nummer ein (WHATSAPP_NUMBER).</p>
+
+    <div class="barcode" aria-hidden="true"></div>
+    <p class="barcode__no">No. 001 · Danke fürs Mitessen</p>
+  </div>
+</div>
+
+<div class="pin-overlay" id="pinOverlay" role="dialog" aria-modal="true" aria-labelledby="pinTitle" aria-hidden="true">
+  <div class="pin" id="pinBox">
+    <button class="pin__close" type="button" id="pinClose" aria-label="Schließen">×</button>
+    <p class="pin__eyebrow">Nur für die Küche</p>
+    <h2 class="pin__title" id="pinTitle">Zutaten &amp; Zubereitung</h2>
+    <form class="pin__field" id="pinForm">
+      <input id="pinInput" type="password" inputmode="numeric" autocomplete="off" maxlength="8" placeholder="PIN" aria-label="PIN">
+      <button class="pin__go" type="submit">Öffnen</button>
+    </form>
+    <p class="pin__error" id="pinError">Falscher PIN.</p>
+  </div>
+</div>
+
+<div class="chef-overlay" id="chefOverlay" role="dialog" aria-modal="true" aria-labelledby="chefTitle" aria-hidden="true">
+  <div class="chef-panel" role="document">
+    <div class="chef-panel__bar">
+      <span id="chefTitle">Chef · Zutaten &amp; Zubereitung</span>
+      <div class="chef-actions">
+        <button class="chef-btn" type="button" id="chefPrint">Drucken</button>
+        <button class="chef-btn" type="button" id="chefClose">Schließen</button>
+      </div>
+    </div>
+    <div class="chef-panel__body" id="chefBody"></div>
+  </div>
+</div>
+
+<script>
+/* Original-Markup für den HTML-Export (vor allen Render-Änderungen). */
+const ORIGINAL_HTML = document.documentElement.outerHTML;
+
+/* =========================================================================
+   KONFIGURATION
+   ========================================================================= */
+
+/* ← HIER DEINE WHATSAPP-NUMMER EINTRAGEN.
+   Ländervorwahl + Nummer, nur Ziffern, ohne "+", z.B. "491701234567".
+   Leer = Demo-Modus (WhatsApp öffnet die Kontaktauswahl). */
+const WHATSAPP_NUMBER = "4917666824553";
+
+const CLIP_TIME = "ab 19 Uhr";   // ← Uhrzeit
+
+/* PIN für den Chef-Bereich (Zutaten & Zubereitung). Bitte ändern. */
+const CHEF_PIN = "0811";
+
+/* == MENU_DATA_START == */
+const CATEGORIES = [
+  {
+    "id": "primi",
+    "num": "01",
+    "kitchen": "trattoria",
+    "name": "I Primi",
+    "sub": "Pasta & Risotto",
+    "dishes": [
+      {
+        "id": "orecchiette-salsiccia",
+        "emoji": "🍝",
+        "name": "Orecchiette mit Crispy Salsiccia & Kirschtomaten",
+        "diet": "meat",
+        "desc": "Knusprige Salsiccia, Kirschtomaten und eine Soße, die nur durch Nudelwasser und Parmesan bindet.",
+        "ing": [
+          "250g Orecchiette",
+          "300g Salsiccia",
+          "250g Kirschtomaten (halbiert)",
+          "1 Schalotte & 2 Knoblauchzehen (fein gewürfelt)",
+          "Schuss Weißwein",
+          "Frische Petersilie, Parmesan, Olivenöl"
+        ],
+        "prep": [
+          "Salsiccia vorbereiten: Schneide die Salsiccia-Haut ein und drücke das Brät heraus. Zerkleinere es grob mit den Händen.",
+          "Crispy anbraten: Eine Pfanne mit etwas Olivenöl erhitzen. Das Salsiccia-Brät hineingeben und richtig schön knusprig (crispy) anbraten. Danach das Fleisch aus der Pfanne nehmen und beiseitestellen (das Fett in der Pfanne lassen!).",
+          "Aromen aufbauen: Im restlichen Salsiccia-Fett die Schalotten und den Knoblauch glasig anbraten. Die halbierten Kirschtomaten dazugeben und 2-3 Minuten mitbraten, bis sie leicht weich werden.",
+          "Ablöschen: Mit einem kräftigen Schuss Weißwein ablöschen und die Hitze reduzieren. Etwas einkochen lassen.",
+          "Pasta kochen: Die Orecchiette in reichlich Salzwasser ca. 2 Minuten kürzer kochen, als auf der Packung steht (sie garen in der Soße nach). Wichtig: Bevor du die Nudeln abgießt, eine große Tasse vom stärkehaltigen Nudelwasser auffangen!",
+          "Hochzeit (Mantecatura): Die Nudeln und die knusprige Salsiccia zu den Tomaten in die Pfanne geben. Einen großzügigen Schluck Nudelwasser und eine Handvoll frisch geriebenen Parmesan hinzufügen.",
+          "Cremig schwenken: Bei mittlerer Hitze alles kräftig verrühren oder schwenken, bis eine cremige, glänzende Soße entsteht. Mit gehackter Petersilie und etwas Pfeffer toppen. Tipp für Tag 2: Bewahre die Hälfte im Kühlschrank auf. Beim Aufwärmen in der Pfanne oder Mikrowelle einfach 2-3 Esslöffel Wasser dazugeben und gut umrühren, dann wird die Soße wieder perfekt cremig."
+        ]
+      },
+      {
+        "id": "pappardelle-short-rib",
+        "emoji": "🥩",
+        "name": "Pappardelle mit „Short Rib“ Style Rinder-Ragù",
+        "diet": "meat",
+        "desc": "Tiefes, langsam geschmortes Ragù – am zweiten Tag sogar noch besser.",
+        "ing": [
+          "250g Pappardelle oder Tagliatelle",
+          "400g Rindergulasch (groß gewürfelt)",
+          "1 Karotte, 1 Selleriestange, 1 Zwiebel (sehr fein gewürfelt)",
+          "1 EL Tomatenmark",
+          "150ml Rotwein & 400ml Rinderbrühe",
+          "Frischer Rosmarin, Parmesan"
+        ],
+        "prep": [
+          "Das Rindfleisch in einem Bräter in Olivenöl scharf anbraten, bis es Röstaromen hat. Herausnehmen.",
+          "Im Bratfett das gewürfelte Gemüse (Soffritto) 10 Minuten weich dünsten. Tomatenmark kurz mitrösten.",
+          "Fleisch zurückgeben, mit Rotwein ablöschen und komplett einkochen lassen.",
+          "Mit Brühe aufgießen, Rosmarin dazugeben und bei niedriger Hitze mit Deckel ca. 2 bis 2,5 Stunden sanft schmoren, bis das Fleisch mit der Gabel zerfällt.",
+          "Fleisch in der Soße zerzupfen. Pasta al dente kochen, mit etwas Nudelwasser und Parmesan direkt im Ragù schwenken."
+        ]
+      },
+      {
+        "id": "bucatini-amatriciana",
+        "emoji": "🥓",
+        "name": "Bucatini all’Amatriciana",
+        "diet": "meat",
+        "desc": "Der römische Klassiker mit Pancetta, San Marzano und Chili.",
+        "ing": [
+          "250g Bucatini (dicke Spaghetti mit Loch) oder Rigatoni",
+          "150g Pancetta oder Bauchspeck (in Streifen)",
+          "400g San Marzano Tomaten (Dose, leicht zerdrückt)",
+          "1 kleine Chilischote (oder Chiliflocken)",
+          "Schuss Weißwein",
+          "Pecorino Romano oder Parmesan"
+        ],
+        "prep": [
+          "Speck in einer kalten Pfanne ohne Öl langsam erhitzen, bis das Fett schmilzt und der Speck knusprig wird. Chili kurz mitbraten.",
+          "Mit einem Schuss Weißwein ablöschen und den Alkohol verdampfen lassen.",
+          "Die Dosentomaten hinzufügen, Hitze reduzieren und ca. 15 Minuten einköcheln lassen.",
+          "Bucatini al dente kochen, tropfnass in die Soße geben.",
+          "Eine Handvoll Käse unterrühren und durchschwenken."
+        ]
+      },
+      {
+        "id": "penne-vodka",
+        "emoji": "🥃",
+        "name": "Penne alla Vodka mit knusprigem Pancetta",
+        "diet": "meat",
+        "desc": "Cremig, tomatig, mit einem Hauch Wodka und knusprigem Pancetta.",
+        "ing": [
+          "250g Penne oder Rigatoni",
+          "100g Pancetta (in feinen Würfeln)",
+          "1 Schalotte & 2 Knoblauchzehen (sehr fein gewürfelt)",
+          "3 EL Tomatenmark",
+          "4cl Wodka",
+          "100ml Sahne",
+          "Parmesan & Chiliflocken (nach Geschmack)"
+        ],
+        "prep": [
+          "Pancetta in einer kalten Pfanne langsam auslassen, bis er richtig knusprig ist. Herausnehmen und auf einem Küchenpapier abtropfen lassen. Das Fett in der Pfanne lassen.",
+          "Schalotte und Knoblauch (und evtl. etwas Chili) im Speckfett glasig dünsten.",
+          "Das Tomatenmark dazugeben und 2-3 Minuten kräftig mitrösten, bis es dunkelrot wird (das karamellisiert den Zucker im Tomatenmark).",
+          "Mit dem Wodka ablöschen und komplett einkochen lassen, bis der Alkoholgeruch verschwunden ist.",
+          "Die Sahne einrühren, Hitze reduzieren und die Soße sanft einköcheln, bis sie eine orange-rote, cremige Konsistenz hat.",
+          "Penne al dente kochen. Mit einer halben Kelle Nudelwasser in die Soße geben und kräftig schwenken. Am Ende den knusprigen Pancetta und frisch geriebenen Parmesan unterheben."
+        ]
+      },
+      {
+        "id": "ragu-genovese",
+        "emoji": "🧅",
+        "name": "Ragù alla Genovese",
+        "diet": "meat",
+        "desc": "Stundenlang geschmort: Rind trifft eine riesige Menge süßlicher Zwiebeln.",
+        "ing": [
+          "250g Ziti, Paccheri oder Rigatoni",
+          "500g Rindergulasch (z.B. aus der Schulter)",
+          "600g Zwiebeln (in feinen Ringen oder gewürfelt)",
+          "1 Karotte & 1 Selleriestange (fein gewürfelt)",
+          "Schuss Weißwein",
+          "Frischer Parmesan"
+        ],
+        "prep": [
+          "Das Rindfleisch in einem Bräter in Olivenöl scharf anbraten. Fleisch herausnehmen.",
+          "Karotte und Sellerie im Bratfett anrösten, dann die riesige Menge Zwiebeln dazugeben. Bei mittlerer Hitze ca. 15 Minuten weich dünsten, bis sie zusammenfallen.",
+          "Fleisch zurückgeben und mit einem guten Schuss Weißwein ablöschen.",
+          "Deckel drauf und bei extrem niedriger Hitze für ca. 3 bis 4 Stunden schmoren lassen. Du brauchst keine Brühe, da die Zwiebeln viel Flüssigkeit abgeben. Gelegentlich umrühren.",
+          "Am Ende zerfällt das Fleisch fast von selbst und die Zwiebeln sind eine braune, süßlich-intensive Soße geworden. Pasta kochen und direkt im Ragù mit ordentlich Parmesan schwenken. (Tipp: Perfekt für Meal-Prep, schmeckt an Tag 2 noch besser!)"
+        ]
+      },
+      {
+        "id": "linguine-limone",
+        "emoji": "🍋",
+        "name": "Linguine al Limone mit Pistazien & Burrata",
+        "diet": "veg",
+        "desc": "Zitrone, kalte Butter, Parmesan und Burrata – frisch, cremig und luxuriös.",
+        "ing": [
+          "250g Linguine",
+          "2 Bio-Zitronen (Abrieb und etwas Saft)",
+          "50g kalte Butter",
+          "70g frisch geriebener Parmesan",
+          "1 Kugel Burrata",
+          "Eine Handvoll gehackte, geröstete Pistazien"
+        ],
+        "prep": [
+          "Linguine in Salzwasser kochen (etwas weniger salzen als sonst, da Soße einreduziert).",
+          "In einer großen Pfanne die Butter schmelzen und den Zitronenabrieb sanft darin erwärmen (nicht bräunen!).",
+          "Nudeln 2 Minuten vor Ende der Garzeit direkt aus dem Wasser in die Pfanne heben.",
+          "Hitze reduzieren. Eine große Kelle Nudelwasser und den Parmesan dazugeben. Alles kräftig rühren und schwenken, bis eine cremige, glänzende Soße entsteht. Mit einem Spritzer Zitronensaft abschmecken.",
+          "Auf dem Teller mit zerrissener Burrata und Pistazien toppen. (Beim Aufwärmen an Tag 2 die Burrata erst nach dem Erhitzen frisch dazugeben)."
+        ]
+      },
+      {
+        "id": "rigatoni-norma",
+        "emoji": "🍆",
+        "name": "Rigatoni alla Norma",
+        "diet": "veg",
+        "desc": "Tiefbraun gebratene Aubergine, Passata und Ricotta Salata.",
+        "ing": [
+          "250g Rigatoni",
+          "1 große Aubergine",
+          "2 Knoblauchzehen (in feinen Scheiben)",
+          "400g Passata (passierte Tomaten)",
+          "Frisches Basilikum",
+          "Salz-Ricotta (Ricotta Salata) – alternativ: Feta oder Parmesan"
+        ],
+        "prep": [
+          "Aubergine in 2 cm dicke Würfel schneiden. In reichlich Olivenöl (!) scharf anbraten, bis sie rundum tiefbraun und weich sind. Leicht salzen und beiseitestellen.",
+          "In derselben Pfanne Knoblauch kurz andünsten, Passata angießen und 10 Minuten köcheln lassen.",
+          "Auberginen und frisches Basilikum in die Tomatensoße geben.",
+          "Pasta kochen, in die Soße heben und mit etwas Nudelwasser binden.",
+          "Großzügig Käse darüber reiben."
+        ]
+      },
+      {
+        "id": "orzotto",
+        "emoji": "🍅",
+        "name": "Cremiges Orzotto mit gerösteten Tomaten",
+        "diet": "veg",
+        "desc": "Orzo wie ein Risotto, mit gerösteten Kirschtomaten und Mascarpone.",
+        "ing": [
+          "250g Orzo / Risoni",
+          "250g Kirschtomaten",
+          "1 Schalotte (fein gewürfelt)",
+          "700ml heiße Gemüsebrühe",
+          "2 EL Mascarpone oder kalte Butter",
+          "Parmesan, frisches Basilikum"
+        ],
+        "prep": [
+          "Kirschtomaten mit Olivenöl und Salz in einer Pfanne scharf anrösten, bis sie platzen und leicht karamellisieren. Beiseitestellen.",
+          "Schalotte in Olivenöl glasig dünsten. Die rohen Orzo-Nudeln dazugeben und 1 Minute mitrösten.",
+          "Wie bei Risotto: Nach und nach heiße Brühe angießen. Immer wieder rühren, bis die Flüssigkeit fast aufgesogen ist, dann nachgießen (dauert ca. 10-12 Minuten).",
+          "Wenn die Nudeln weich, aber noch bissfest sind, vom Herd nehmen.",
+          "Mascarpone (oder Butter), Parmesan und die gerösteten Tomaten kräftig unterrühren."
+        ]
+      },
+      {
+        "id": "pappardelle-tartufo",
+        "emoji": "🍄",
+        "name": "Pappardelle mit Trüffelbutter & Champignons",
+        "diet": "veg",
+        "desc": "Die Butternudel-Luxusversion: Trüffelbutter, Champignons und geröstete Haselnüsse.",
+        "ing": [
+          "250g Pappardelle",
+          "250g braune Champignons (in feinen Scheiben)",
+          "50g gute Trüffelbutter (gibt es im Supermarkt im Feinkostregal)",
+          "50g frisch geriebener Parmesan",
+          "Gehackte Haselnüsse (ohne Fett geröstet)",
+          "Frischer schwarzer Pfeffer"
+        ],
+        "prep": [
+          "Champignons in einer trockenen Pfanne scharf anbraten, bis sie Farbe bekommen. Erst am Ende etwas Olivenöl und Salz dazugeben.",
+          "Pappardelle al dente kochen. Nudelwasser (ca. 150ml) aufheben.",
+          "Die Nudeln zu den Pilzen in die Pfanne geben. Die Hitze auf Minimum stellen.",
+          "Trüffelbutter, Parmesan und das Nudelwasser hinzufügen. Kräftig schwenken, bis eine emulgierte, dicke Buttersoße entsteht, die an den Nudeln haftet.",
+          "Mit frisch gemahlenem Pfeffer und den gerösteten Haselnüssen als Crunch servieren."
+        ]
+      },
+      {
+        "id": "spaghetti-nerano",
+        "emoji": "🥒",
+        "name": "Spaghetti alla Nerano",
+        "diet": "veg",
+        "desc": "Frittierte Zucchini, Basilikum und Käse – die Amalfi-Küste auf dem Teller.",
+        "ing": [
+          "250g Spaghetti",
+          "3 mittelgroße Zucchini (in hauchdünne Scheiben geschnitten)",
+          "1 Knoblauchzehe (ganz, nur angedrückt)",
+          "70g Provolone del Monaco (alternativ: 50g Parmesan & 20g Pecorino gemischt)",
+          "Viel frisches Basilikum (handvoll)",
+          "Reichlich neutrales Öl (zum Braten) & etwas Olivenöl"
+        ],
+        "prep": [
+          "Die Zucchinischeiben in reichlich neutralem Öl goldbraun frittieren/braten. Mit einer Schaumkelle herausnehmen, auf Küchenpapier abtropfen lassen und leicht salzen. (Einige Scheiben für die Deko aufheben).",
+          "In einer großen Pfanne einen Schuss Olivenöl erwärmen und die Knoblauchzehe darin aromatisieren (danach herausnehmen).",
+          "Spaghetti kochen. Einen großen Schluck Nudelwasser in die Pfanne geben, die gebratenen Zucchini und das zerrupfte Basilikum hinzufügen. Die Zucchini zerfallen durch das heiße Wasser leicht und bilden die Basis der Soße.",
+          "Die tropfnassen Spaghetti dazugeben. Die Pfanne vom Herd nehmen (!).",
+          "Den geriebenen Käse in zwei Etappen einrühren und dabei ununterbrochen rühren und schwenken, bis eine perfekte Emulsion entsteht. Wenn nötig, tropfenweise mehr Nudelwasser dazugeben."
+        ]
+      },
+      {
+        "id": "gnocchi-forno",
+        "emoji": "🍅",
+        "name": "Gnocchi al Forno mit Mozzarella & Basilikum",
+        "diet": "veg",
+        "desc": "Überbackene Gnocchi mit Tomatensauce, Mozzarella und Basilikum.",
+        "ing": [
+          "400g - 500g frische Gnocchi (aus dem Kühlregal)",
+          "1 Flasche Passata (ca. 400g passierte Tomaten)",
+          "1 Knoblauchzehe & 1 kleine Zwiebel (sehr fein gewürfelt)",
+          "1 gehäufter EL Mascarpone (oder Sahne)",
+          "1 Kugel Mozzarella (in Würfel geschnitten und gut abgetropft!)",
+          "Frisches Basilikum & 30g Parmesan"
+        ],
+        "prep": [
+          "Ofen auf 200°C Ober-/Unterhitze vorheizen.",
+          "Zwiebel und Knoblauch in Olivenöl glasig dünsten. Passata angießen und ca. 15 Minuten sanft einköcheln lassen. Mit Salz und Pfeffer abschmecken.",
+          "Pfanne vom Herd nehmen, den Mascarpone und eine Handvoll gehacktes Basilikum einrühren, bis die Soße hellrot und cremig ist.",
+          "Gnocchi ungekocht (!) direkt in die warme Tomatensoße geben und gut durchmischen.",
+          "Alles in eine Auflaufform füllen. Mit den Mozzarellawürfeln und dem geriebenen Parmesan bestreuen.",
+          "Ca. 15-20 Minuten im Ofen backen, bis der Käse geschmolzen ist und leichte Blasen wirft. (Aufwärmen: An Tag 2 einfach nochmal kurz in den Ofen oder die Mikrowelle schieben)."
+        ]
+      },
+      {
+        "id": "white-ragu",
+        "emoji": "🍄",
+        "name": "Vegetarisches „White Ragù“ aus Pilzen",
+        "diet": "veg",
+        "desc": "Fein gewürfelte Pilze, Soffritto und Sahne – herzhaft wie eine Bolognese, nur ohne Fleisch.",
+        "ing": [
+          "250g Rigatoni oder Pappardelle",
+          "400g Pilze (sehr fein gewürfelt, fast wie Hackfleisch)",
+          "1 Karotte, 1 Selleriestange, 1 halbe Zwiebel (alles extrem fein gewürfelt = Soffritto)",
+          "1 Knoblauchzehe",
+          "Schuss Weißwein, 100ml Gemüsebrühe",
+          "2-3 EL Sahne oder Mascarpone",
+          "Parmesan, Petersilie, etwas Butter"
+        ],
+        "prep": [
+          "Gemüse-Basis (Soffritto) anbraten: In einem Topf oder einer tiefen Pfanne etwas Olivenöl und ein kleines Stück Butter erhitzen. Karotte, Sellerie und Zwiebel darin bei mittlerer Hitze ca. 5-7 Minuten sanft anschwitzen, bis alles weich ist.",
+          "Pilze braten: Die sehr fein gewürfelten Pilze (und Knoblauch) dazugeben. Die Hitze etwas erhöhen. Die Pilze werden erst Wasser lassen – brat sie so lange weiter, bis das Wasser verdampft ist und sie anfangen, leicht braun zu werden (das gibt die Röstaromen!).",
+          "Ablöschen: Mit Weißwein ablöschen und den Bratensatz vom Boden kratzen.",
+          "Schmoren: Die Gemüsebrühe und die Sahne/Mascarpone einrühren. Das Ragù auf kleiner Hitze für ca. 15-20 Minuten sanft einköcheln lassen, bis es schön sämig wird. Mit Salz und viel schwarzem Pfeffer abschmecken.",
+          "Pasta kochen: Nudeln in Salzwasser al dente kochen. Auch hier: Nudelwasser aufheben!",
+          "Vermengen: Die Nudeln in das Pilz-Ragù geben. Einen Schuss Nudelwasser und ordentlich Parmesan dazu. Alles kräftig durchrühren, bis die Nudeln komplett von der cremigen Soße ummantelt sind. Mit Petersilie garnieren. Tipp für Tag 4: Pilz-Ragù zieht über Nacht fantastisch durch. Auch hier beim Aufwärmen am nächsten Tag wieder einen winzigen Schuss Wasser hinzugeben, damit die Pasta wieder saftig wird."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "secondi",
+    "num": "02",
+    "kitchen": "trattoria",
+    "name": "I Secondi",
+    "sub": "Fleisch & Polpette",
+    "dishes": [
+      {
+        "id": "polpette",
+        "emoji": "🧆",
+        "name": "Italienische Polpette in Tomaten-Sugo",
+        "diet": "meat",
+        "desc": "Saftige Hackbällchen, die direkt in der Tomatensoße garziehen.",
+        "ing": [
+          "250g Spaghetti",
+          "300g Rinderhackfleisch",
+          "1 altbackenes Brötchen (in Milch eingeweicht und ausgedrückt)",
+          "1 Ei, 3 EL Parmesan, frische Petersilie",
+          "500g Passata (passierte Tomaten)",
+          "1 Knoblauchzehe, Olivenöl"
+        ],
+        "prep": [
+          "Hackfleisch, ausgedrücktes Brötchen, Ei, Parmesan, Petersilie, Salz und Pfeffer gut verkneten. Kleine Bällchen formen.",
+          "Polpette in Olivenöl rundum braun anbraten. Knoblauch kurz mit in die Pfanne geben.",
+          "Mit Passata aufgießen. Hitze reduzieren, Deckel drauf und 20-25 Minuten leise köcheln lassen.",
+          "Spaghetti kochen, abgießen und auf dem Teller mit der tiefroten Soße und den Bällchen anrichten."
+        ]
+      },
+      {
+        "id": "piccata",
+        "emoji": "🍗",
+        "name": "Hähnchen-Piccata in Zitronen-Kapern-Butter",
+        "diet": "meat",
+        "desc": "Zartes Hähnchen in Parmesanhülle mit Zitrone und Kapern.",
+        "ing": [
+          "200g Spaghettini (dünne Spaghetti)",
+          "2 Hähnchenbrüste (längs halbiert, leicht flach geklopft)",
+          "1 Ei & 40g geriebener Parmesan (verquirlt)",
+          "Etwas Mehl",
+          "1 Zitrone (Saft) & 2 EL Kapern",
+          "50g kalte Butter & 100ml Hühnerbrühe"
+        ],
+        "prep": [
+          "Fleisch salzen, in Mehl wenden, dann durch die Ei-Parmesan-Mischung ziehen.",
+          "In reichlich Olivenöl bei mittlerer Hitze goldbraun braten (ca. 3-4 Min pro Seite). Fleisch herausnehmen.",
+          "Bratensatz in der Pfanne mit Brühe und Zitronensaft ablöschen. Kapern dazugeben und auf die Hälfte einkochen lassen.",
+          "Pfanne vom Herd nehmen und die kalte Butter in Stücken kräftig einrühren, bis die Soße andickt (montieren).",
+          "Spaghettini kochen, durch die Soße schwenken und mit dem Hähnchen servieren. (Aufwärmen: Fleisch separat im Ofen oder Pfanne erwärmen, Nudeln in der Mikrowelle)."
+        ]
+      }
+    ]
+  }
+];
+/* == MENU_DATA_END == */
+
+const MENU_MODES = {
+  trattoria: {
+    label: "Trattoria",
+    name: "Trattoria di Luki",
+    main: "Trattoria",
+    accent: "di Luki",
+    kicker: "Aus Liebe zur Italienischen Küche",
+    sub: "Handgemachte Pasta, langsam geschmorte Ragùs und italienische Klassiker – gekocht in der WG.",
+    bg: "Luki",
+    kitchens: 1
+  },
+  asia: {
+    label: "Asiatisch",
+    name: "Tokyo & Bangkok Corner",
+    main: "Tokyo",
+    accent: "& Bangkok",
+    kicker: "Izakaya · Coming soon",
+    sub: "Ramen, Gyoza und Currys – die asiatische Karte ist in Arbeit.",
+    bg: "Asia",
+    kitchens: 1
+  },
+  both: {
+    label: "Beides",
+    name: "Trattoria di Luki & Izakaya",
+    main: "Trattoria",
+    accent: "& Izakaya",
+    kicker: "Zwei Küchen · ein Abend",
+    sub: "Italienische Tradition trifft Tokio und Bangkok. Die asiatische Karte kommt bald.",
+    bg: "Luki",
+    kitchens: 2
+  }
+};
+
+const MENU_MODE = (() => {
+  const m = new URLSearchParams(location.search).get("menu");
+  return MENU_MODES[m] ? m : "trattoria";
+})();
+
+const menuCfg = () => MENU_MODES[MENU_MODE];
+const menuName = () => menuCfg().name;
+const kitchenOf = c => c && c.kitchen === "asia" ? "asia" : "trattoria";
+const kitchenLabel = k => k === "asia" ? "Asiatisch" : "Trattoria";
+let shareMenu = MENU_MODE;
+
+const DIETS = {
+  vegan: { label: "Vegano" },
+  veg:   { label: "Vegetariano" },
+  meat:  { label: "Carne" }
+};
+
+/* =========================================================================
+   LOGIK
+   ========================================================================= */
+
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+const state = { diet: "all", selected: new Map() };
+let ALL_DISHES = [];
+let dishById = {};
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function slugify(text) {
+  return String(text).toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/ß/g, "ss")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 48) || "eintrag";
+}
+
+function uniqueId(text, existing) {
+  const base = slugify(text);
+  let id = base;
+  let i = 2;
+  while (existing.includes(id)) id = `${base}-${i++}`;
+  return id;
+}
+
+function modeCats() {
+  if (MENU_MODE === "both") return CATEGORIES;
+  return CATEGORIES.filter(c => kitchenOf(c) === MENU_MODE);
+}
+
+function refreshData() {
+  ALL_DISHES = CATEGORIES.flatMap(c => c.dishes);
+  dishById = Object.fromEntries(ALL_DISHES.map(d => [d.id, d]));
+  for (const id of [...state.selected.keys()]) {
+    if (!dishById[id]) state.selected.delete(id);
+  }
+}
+
+refreshData();
+
+const menuEl        = $("#menu");
+const tocEl         = $("#toc");
+const cartEl        = $("#cart");
+const cartCount     = $("#cartCount");
+const cartNames     = $("#cartNames");
+const overlay       = $("#overlay");
+const orderList     = $("#orderList");
+const nameField     = $("#nameField");
+const nameInput     = $("#name");
+const sendHint      = $("#sendHint");
+const receiptCount  = $("#receiptCount");
+const checkoutMenu  = $("#checkoutMenu");
+const checkoutCount = $("#checkoutCount");
+const marqueeTrack  = $("#marqueeTrack");
+const pinOverlay    = $("#pinOverlay");
+const pinBox        = $("#pinBox");
+const pinInput      = $("#pinInput");
+const chefOverlay   = $("#chefOverlay");
+const chefBody      = $("#chefBody");
+
+const dietMatches = d => state.diet === "all" || d.diet === state.diet;
+
+function visibleCats() {
+  return modeCats()
+    .map(c => ({ ...c, dishes: c.dishes.filter(dietMatches) }))
+    .filter(c => c.dishes.length)
+    .map((c, i) => ({ ...c, displayNum: String(i + 1).padStart(2, "0") }));
+}
+
+function renderHero() {
+  const cfg = menuCfg();
+  const hasAsia = CATEGORIES.some(c => kitchenOf(c) === "asia" && c.dishes.length);
+
+  let kicker = cfg.kicker;
+  let sub = cfg.sub;
+  if (MENU_MODE === "asia") {
+    kicker = hasAsia ? "Tokio & Bangkok · Izakaya" : "Tokio & Bangkok · Coming soon";
+    sub = hasAsia ? "Ramen, Gyoza und Currys – asiatische Klassiker aus der WG." : cfg.sub;
+  } else if (MENU_MODE === "both") {
+    sub = hasAsia ? "Italienische Tradition trifft Tokio und Bangkok." : cfg.sub;
+  }
+
+  $("#titleMain").textContent = cfg.main;
+  $("#titleAccent").textContent = cfg.accent;
+  $("#heroKicker").textContent = kicker;
+  $("#subtitle").textContent = sub;
+  $("#bgWord").textContent = cfg.bg;
+  document.title = `${cfg.name} — Pop-Up`;
+
+  const cats = modeCats();
+  const dishes = cats.flatMap(c => c.dishes);
+
+  if (MENU_MODE === "asia" && !dishes.length) {
+    $("#heroMeta").innerHTML = `<b>01</b> Küche · <b>Coming</b> soon`;
+  } else {
+    const chapters = String(cats.length).padStart(2, "0");
+    const count = String(dishes.length).padStart(2, "0");
+    const kitchens = String(cfg.kitchens).padStart(2, "0");
+    $("#heroMeta").innerHTML = `<b>${chapters}</b> Kapitel · <b>${count}</b> Gerichte · <b>${kitchens}</b> ${cfg.kitchens === 1 ? "Küche" : "Küchen"}`;
+  }
+
+  $("#filterBar").hidden = !cats.some(c => c.dishes.length);
+}
+
+function renderMenu() {
+  const cats = visibleCats();
+  const asiaEmpty = MENU_MODE === "asia" && !modeCats().some(c => c.dishes.length);
+
+  if (!cats.length) {
+    const title = asiaEmpty ? "Presto." : "Niente qui.";
+    const msg = asiaEmpty
+      ? "Die asiatische Karte ist noch in Arbeit. Sobald die asiatische Karte steht, stehen sie hier."
+      : state.diet === "vegan"
+        ? "Aktuell ist kein Gericht vegan. Frag Luki nach einer veganen Variante – vieles lässt sich anpassen."
+        : "In dieser Auswahl ist gerade nichts auf der Karte.";
+    menuEl.innerHTML = `<div class="empty"><h3>${title}</h3><p>${msg}</p></div>`;
+    return;
+  }
+
+  menuEl.innerHTML = cats.map(cat => `
+    <section class="chapter" id="cat-${cat.id}" aria-labelledby="title-${cat.id}">
+      <header class="chapter__head">
+        <span class="chapter__num" aria-hidden="true">${cat.displayNum}</span>
+        <div>
+          <h2 class="chapter__title" id="title-${cat.id}">${esc(cat.name)}</h2>
+          <p class="chapter__sub">${esc(cat.sub)}</p>
+        </div>
+        <span class="chapter__count" aria-label="${cat.dishes.length} Gerichte">${String(cat.dishes.length).padStart(2, "0")}</span>
+      </header>
+
+      <div class="dishes">
+        ${cat.dishes.map((d, i) => {
+          const checked = state.selected.has(d.id);
+          return `
+            <label class="card">
+              <input type="checkbox" value="${d.id}" ${checked ? "checked" : ""}>
+              <div class="card__top">
+                <span class="card__no">${String(i + 1).padStart(2, "0")}</span>
+                <span class="card__state">
+                  <span class="pick">Hinzufügen</span>
+                  <span class="picked">Gewählt</span>
+                </span>
+              </div>
+              <h3 class="card__name">${esc(d.name)}</h3>
+              <p class="card__desc">${esc(d.desc)}</p>
+              <div class="card__meta">
+                <span class="tag">${(DIETS[d.diet] || DIETS.veg).label}</span>
+              </div>
+            </label>
+          `;
+        }).join("")}
+      </div>
+    </section>
+  `).join("");
+}
+
+function renderToc() {
+  const cats = visibleCats();
+  const rows = cats.map((c, i) => `
+    <a class="toc__row" href="#cat-${c.id}">
+      <span class="toc__no">${String(i + 1).padStart(2, "0")}</span>
+      <span class="toc__name">${esc(c.name)}</span>
+      <span class="toc__dots" aria-hidden="true"></span>
+      <span class="toc__arrow" aria-hidden="true">→</span>
+    </a>
+  `).join("");
+
+  const hasAsia = cats.some(c => kitchenOf(c) === "asia");
+  const showSoon = MENU_MODE === "trattoria" || !hasAsia;
+  const soonNo = String(cats.length + 1).padStart(2, "0");
+
+  tocEl.innerHTML = `<span class="toc__tag">Inhalt</span>` + rows + (showSoon ? `
+    <div class="toc__row is-soon" role="link" aria-disabled="true" aria-label="Tokyo und Bangkok Corner, coming soon">
+      <span class="toc__no">${soonNo}</span>
+      <span class="toc__name">Tokyo &amp; Bangkok Corner</span>
+      <span class="toc__dots" aria-hidden="true"></span>
+      <span class="toc__soon">Coming soon</span>
+    </div>
+  ` : "");
+}
+
+function renderMarquee() {
+  const cats = modeCats();
+  const names = cats.flatMap(c => c.dishes.map(d => d.name));
+
+  if (!names.length) {
+    if (MENU_MODE === "asia") names.push("Ramen", "Gyoza", "Currys", "Coming soon");
+    else names.push("Trattoria di Luki");
+  }
+  if (MENU_MODE === "both" && !cats.some(c => kitchenOf(c) === "asia")) {
+    names.push("Tokyo & Bangkok Corner · Coming soon");
+  }
+
+  const seq = names.map(n => `<span>${esc(n)}</span>`).join("").repeat(2);
+  marqueeTrack.innerHTML = `<div>${seq}</div><div aria-hidden="true">${seq}</div>`;
+}
+
+function updateFilterCounts() {
+  const dishes = modeCats().flatMap(c => c.dishes);
+  const counts = { all: dishes.length, vegan: 0, veg: 0, meat: 0 };
+  dishes.forEach(d => { counts[d.diet] = (counts[d.diet] || 0) + 1; });
+  $$("[data-count]").forEach(el => {
+    el.textContent = String(counts[el.dataset.count] ?? 0);
+  });
+}
+
+function renderAll() {
+  refreshData();
+  renderHero();
+  updateFilterCounts();
+  renderToc();
+  renderMenu();
+  renderMarquee();
+  updateCart();
+}
+
+function setDiet(diet) {
+  state.diet = diet;
+  $$(".filter").forEach(btn => {
+    const active = btn.dataset.diet === diet;
+    btn.classList.toggle("is-active", active);
+    btn.setAttribute("aria-pressed", String(active));
+  });
+  renderToc();
+  renderMenu();
+}
+
+$$(".filter").forEach(btn => {
+  btn.addEventListener("click", () => setDiet(btn.dataset.diet));
+});
+
+function syncLock() {
+  const open = overlay.classList.contains("is-open")
+    || pinOverlay.classList.contains("is-open")
+    || chefOverlay.classList.contains("is-open");
+  document.body.style.overflow = open ? "hidden" : "";
+}
+
+menuEl.addEventListener("change", e => {
+  const input = e.target.closest('input[type="checkbox"]');
+  if (!input) return;
+  if (input.checked) state.selected.set(input.value, dishById[input.value]);
+  else state.selected.delete(input.value);
+  updateCart();
+});
+
+function updateCart() {
+  const items = [...state.selected.values()];
+  const n = items.length;
+
+  cartEl.classList.toggle("is-visible", n > 0);
+  cartEl.setAttribute("aria-hidden", String(n === 0));
+
+  cartCount.textContent = `${String(n).padStart(2, "0")} ${n === 1 ? "Gericht ausgewählt" : "Gerichte ausgewählt"}`;
+  cartNames.textContent = items.map(d => d.name).join(" · ");
+}
+
+function renderOrder() {
+  const items = [...state.selected.values()];
+  orderList.innerHTML = items.map((d, i) => `
+    <li class="order__item">
+      <span class="order__idx">${String(i + 1).padStart(2, "0")}</span>
+      <span class="order__name">${d.name}</span>
+      <span class="order__dots" aria-hidden="true"></span>
+      <button class="order__remove" type="button" data-remove="${d.id}" aria-label="${d.name} entfernen">×</button>
+    </li>
+  `).join("");
+
+  const label = `${String(items.length).padStart(2, "0")} ${items.length === 1 ? "Gericht" : "Gerichte"}`;
+  receiptCount.textContent = label;
+  checkoutCount.textContent = label;
+}
+
+function openCart() {
+  if (!state.selected.size) return;
+  renderOrder();
+  checkoutMenu.textContent = menuName();
+  nameField.classList.remove("is-invalid");
+  sendHint.hidden = WHATSAPP_NUMBER.trim() !== "";
+  overlay.classList.add("is-open");
+  overlay.setAttribute("aria-hidden", "false");
+  syncLock();
+  overlay.scrollTop = 0;
+}
+
+function closeCart() {
+  overlay.classList.remove("is-open");
+  overlay.setAttribute("aria-hidden", "true");
+  syncLock();
+}
+
+$("#openCart").addEventListener("click", openCart);
+$("#closeCart").addEventListener("click", closeCart);
+overlay.addEventListener("click", e => { if (e.target === overlay) closeCart(); });
+
+orderList.addEventListener("click", e => {
+  const btn = e.target.closest("[data-remove]");
+  if (!btn) return;
+  state.selected.delete(btn.dataset.remove);
+
+  const input = menuEl.querySelector(`input[value="${btn.dataset.remove}"]`);
+  if (input) input.checked = false;
+
+  updateCart();
+  renderOrder();
+
+  if (!state.selected.size) closeCart();
+});
+
+const savedName = (() => {
+  try { return localStorage.getItem("popup-name") || ""; } catch { return ""; }
+})();
+if (savedName) nameInput.value = savedName;
+
+nameInput.addEventListener("input", () => {
+  nameField.classList.remove("is-invalid");
+  try { localStorage.setItem("popup-name", nameInput.value.trim()); } catch {}
+});
+
+function buildMessage(name) {
+  const lines = [...state.selected.values()].map(d => `• ${d.name}`).join("\n");
+  return `Hi, hier ist ${name}. Ich bestelle für ${eventLabel()} (${menuName()}):\n\n${lines}\n\nDanke!`;
+}
+
+$("#send").addEventListener("click", () => {
+  const name = nameInput.value.trim();
+
+  if (!name) {
+    nameField.classList.add("is-invalid");
+    nameInput.focus();
+    nameInput.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  if (!state.selected.size) return;
+
+  const number = WHATSAPP_NUMBER.replace(/\D/g, "");
+  const url = `https://wa.me/${number}?text=${encodeURIComponent(buildMessage(name))}`;
+  window.location.href = url;
+});
+
+/* ---------- Chef-Bereich ---------- */
+
+let editorState = null;
+let editorOpen = false;
+
+function renderEditorForm() {
+  if (!editorState) return "";
+
+  if (editorState.type === "cat") {
+    const cat = CATEGORIES.find(c => c.id === editorState.id);
+    if (!cat) return "";
+    return `<form class="editor-form" id="editorForm" data-type="cat">
+      <div class="editor-form__row">
+        <label>Name<input name="catName" value="${esc(cat.name)}" required></label>
+        <label>Untertitel<input name="catSub" value="${esc(cat.sub || "")}" placeholder="z. B. Ramen &amp; Gyoza"></label>
+      </div>
+      <label>Küche
+        <select name="catKitchen">
+          <option value="trattoria" ${kitchenOf(cat) === "trattoria" ? "selected" : ""}>Trattoria</option>
+          <option value="asia" ${kitchenOf(cat) === "asia" ? "selected" : ""}>Asiatisch</option>
+        </select>
+      </label>
+      <div class="editor-form__actions">
+        <button class="chef-btn chef-btn--solid" type="submit">Speichern</button>
+        <button class="chef-btn" type="button" data-editor="cancel">Abbrechen</button>
+      </div>
+    </form>`;
+  }
+
+  const dish = editorState.mode === "edit" ? dishById[editorState.id] : null;
+  const currentCat = dish ? CATEGORIES.find(c => c.dishes.includes(dish)) : null;
+  const catId = (currentCat && currentCat.id) || editorState.catId || (CATEGORIES[0] && CATEGORIES[0].id) || "__new";
+  const newCat = catId === "__new";
+  const newKitchen = (currentCat && kitchenOf(currentCat)) || editorState.kitchen || (MENU_MODE === "asia" ? "asia" : "trattoria");
+  const options = CATEGORIES.map(c => `
+    <option value="${esc(c.id)}" ${c.id === catId ? "selected" : ""}>${esc(c.name)} · ${kitchenLabel(kitchenOf(c))}</option>
+  `).join("");
+
+  return `<form class="editor-form" id="editorForm" data-type="dish" data-id="${dish ? esc(dish.id) : ""}">
+    <label>Kategorie
+      <select name="cat" id="editorCat">
+        ${options}
+        <option value="__new" ${newCat ? "selected" : ""}>＋ Neue Kategorie …</option>
+      </select>
+    </label>
+    <div id="editorNewCat" ${newCat ? "" : "hidden"}>
+      <div class="editor-form__row">
+        <label>Neue Kategorie<input name="newCatName" placeholder="z. B. Tokyo &amp; Bangkok Corner"></label>
+        <label>Untertitel<input name="newCatSub" placeholder="z. B. Ramen &amp; Gyoza"></label>
+      </div>
+      <label>Küche
+        <select name="newCatKitchen">
+          <option value="trattoria" ${newKitchen === "trattoria" ? "selected" : ""}>Trattoria</option>
+          <option value="asia" ${newKitchen === "asia" ? "selected" : ""}>Asiatisch</option>
+        </select>
+      </label>
+    </div>
+    <label>Name<input name="name" value="${dish ? esc(dish.name) : ""}" required></label>
+    <label>Beschreibung<textarea name="desc" rows="2">${dish ? esc(dish.desc) : ""}</textarea></label>
+    <label>Ernährung
+      <select name="diet">
+        <option value="meat" ${dish && dish.diet === "meat" ? "selected" : ""}>Fleisch</option>
+        <option value="veg" ${!dish || dish.diet === "veg" ? "selected" : ""}>Vegetarisch</option>
+        <option value="vegan" ${dish && dish.diet === "vegan" ? "selected" : ""}>Vegan</option>
+      </select>
+    </label>
+    <label>Zutaten (eine pro Zeile)<textarea name="ing" rows="4">${dish ? esc(dish.ing.join("\n")) : ""}</textarea></label>
+    <label>Zubereitung (eine pro Zeile)<textarea name="prep" rows="5">${dish ? esc(dish.prep.join("\n")) : ""}</textarea></label>
+    <div class="editor-form__actions">
+      <button class="chef-btn chef-btn--solid" type="submit">${dish ? "Speichern" : "Hinzufügen"}</button>
+      <button class="chef-btn" type="button" data-editor="cancel">Abbrechen</button>
+    </div>
+  </form>`;
+}
+
+function renderEditorList() {
+  if (!CATEGORIES.length) {
+    return `<p class="editor-empty">Noch keine Kategorien. Lege über „＋ Gericht“ die erste an.</p>`;
+  }
+  return CATEGORIES.map(cat => `
+    <div class="editor-cat">
+      <div class="editor-cat__head">
+        <div>
+          <strong>${esc(cat.name)}</strong>
+          <span>${kitchenLabel(kitchenOf(cat))}${cat.sub ? " · " + esc(cat.sub) : ""}</span>
+        </div>
+        <div class="editor-cat__actions">
+          <button class="chef-btn" type="button" data-editor="dish-new" data-cat="${esc(cat.id)}" aria-label="Gericht hinzufügen">＋</button>
+          <button class="chef-btn" type="button" data-editor="cat-edit" data-id="${esc(cat.id)}">Kategorie</button>
+          <button class="chef-btn" type="button" data-editor="cat-del" data-id="${esc(cat.id)}" aria-label="Kategorie löschen">×</button>
+        </div>
+      </div>
+      ${cat.dishes.length ? cat.dishes.map(d => `
+        <div class="editor-dish">
+          <span>${esc(d.name)}</span>
+          <small>${(DIETS[d.diet] || DIETS.veg).label}</small>
+          <button class="chef-btn" type="button" data-editor="dish-edit" data-id="${esc(d.id)}">Bearbeiten</button>
+          <button class="chef-btn" type="button" data-editor="dish-del" data-id="${esc(d.id)}" aria-label="Gericht löschen">×</button>
+        </div>
+      `).join("") : `<p class="editor-empty">Noch keine Gerichte.</p>`}
+    </div>
+  `).join("");
+}
+
+function renderChef() {
+  return `<details class="chef-editor" ${editorOpen ? "open" : ""}>
+      <summary>Karte bearbeiten <span>${ALL_DISHES.length} Gerichte</span></summary>
+      <div class="chef-editor__body">
+        <p class="chef-editor__note">Änderungen bleiben nur in diesem Browser. Danach <b>„index.html exportieren“</b> und die Datei bei GitHub ersetzen.</p>
+        <div class="chef-editor__actions">
+          <button class="chef-btn" type="button" data-editor="new">＋ Gericht</button>
+          <button class="chef-btn chef-btn--solid" type="button" data-editor="export">index.html exportieren</button>
+        </div>
+        ${renderEditorForm()}
+        <div class="chef-editor__list">${renderEditorList()}</div>
+      </div>
+    </details>` +
+    `<section class="chef-release">
+      <div class="chef-cat__head">
+        <h3>Freigabe</h3>
+        <span class="chef-cat__count">Menü, Datum &amp; Link</span>
+      </div>
+      <p class="chef-release__text">Menü und Datum wählen, Link kopieren und an die Gäste schicken. Das Datum erscheint oben und im Bestellschein. Asiatisch zeigt „Coming soon“, solange dort keine Gerichte stehen. Der Link muss online erreichbar sein (GitHub Pages, Netlify Drop o. Ä.).</p>
+      <div class="chef-release__row">
+        <select id="shareMenu" aria-label="Menü für den Link">
+          <option value="trattoria" ${shareMenu === "trattoria" ? "selected" : ""}>Trattoria di Luki</option>
+          <option value="asia" ${shareMenu === "asia" ? "selected" : ""}>Tokyo &amp; Bangkok Corner</option>
+          <option value="both" ${shareMenu === "both" ? "selected" : ""}>Beides</option>
+        </select>
+        <input type="date" id="eventDate" value="${toISO(eventDate)}" aria-label="Event-Datum">
+        <button class="chef-btn chef-btn--solid" type="button" id="copyLink">Link kopieren</button>
+      </div>
+      <p class="chef-release__url" id="shareUrl">${shareUrl()}</p>
+      ${location.protocol === "file:" ? '<p class="chef-release__warn">Lokal geöffnet: Dieser Link funktioniert nur auf diesem Rechner. Lade die Datei zuerst online (GitHub Pages / Netlify Drop).</p>' : ""}
+      <p class="chef-release__ok" id="copyOk" hidden>Link kopiert.</p>
+    </section>` +
+    `<p class="chef-intro">Nur für dich: Zutaten und Zubereitung, ohne Gäste-Ansicht. Die Gerichte sind für zwei Tage gerechnet.</p>` +
+    CATEGORIES.map(cat => `
+      <section class="chef-cat">
+        <div class="chef-cat__head">
+          <h3>${esc(cat.name)}</h3>
+          <span class="chef-cat__count">${kitchenLabel(kitchenOf(cat))} · ${cat.dishes.length} Gerichte</span>
+        </div>
+        ${cat.dishes.map(d => `
+          <article class="chef-dish">
+            <h4>${esc(d.name)}</h4>
+            <p class="chef-dish__meta">${(DIETS[d.diet] || DIETS.veg).label} · ${d.prep.length} Schritte</p>
+            <h5>Zutaten (für 2 Tage)</h5>
+            <ul>${d.ing.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+            <h5>Zubereitung</h5>
+            <ol>${d.prep.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
+          </article>
+        `).join("")}
+      </section>
+    `).join("") +
+    `<p class="chef-foot">Intern · Nur für Luki · ${ALL_DISHES.length} Gerichte</p>`;
+}
+
+function refreshChef() {
+  if (!chefOverlay.classList.contains("is-open")) return;
+  const top = chefOverlay.scrollTop;
+  chefBody.innerHTML = renderChef();
+  chefOverlay.scrollTop = top;
+}
+
+function afterEdit() {
+  editorState = null;
+  editorOpen = true;
+  renderAll();
+  refreshChef();
+}
+
+function exportHTML() {
+  const json = JSON.stringify(CATEGORIES, null, 2)
+    .replace(/<\/script/gi, "<\\/script")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
+  const block = `/* == MENU_DATA_START == */\nconst CATEGORIES = ${json};\n/* == MENU_DATA_END == */`;
+  const re = /\/\* == MENU_DATA_START == \*\/[\s\S]*?\/\* == MENU_DATA_END == \*\//;
+  if (!re.test(ORIGINAL_HTML)) {
+    alert("Datenblock nicht gefunden. Bitte die Datei manuell prüfen.");
+    return;
+  }
+  const html = ORIGINAL_HTML.replace(re, () => block);
+  const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "index.html";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+}
+
+function openPin() {
+  pinBox.classList.remove("is-invalid");
+  pinInput.value = "";
+  pinOverlay.classList.add("is-open");
+  pinOverlay.setAttribute("aria-hidden", "false");
+  syncLock();
+  setTimeout(() => pinInput.focus(), 60);
+}
+
+function closePin() {
+  pinOverlay.classList.remove("is-open");
+  pinOverlay.setAttribute("aria-hidden", "true");
+  syncLock();
+}
+
+function tryPin() {
+  if (pinInput.value.trim() === CHEF_PIN) {
+    closePin();
+    openChef();
+    return;
+  }
+  pinBox.classList.remove("is-invalid");
+  void pinBox.offsetWidth;
+  pinBox.classList.add("is-invalid");
+  pinInput.select();
+}
+
+function openChef() {
+  chefBody.innerHTML = renderChef();
+  chefOverlay.classList.add("is-open");
+  chefOverlay.setAttribute("aria-hidden", "false");
+  syncLock();
+  chefOverlay.scrollTop = 0;
+}
+
+function closeChef() {
+  chefOverlay.classList.remove("is-open");
+  chefOverlay.setAttribute("aria-hidden", "true");
+  syncLock();
+}
+
+$("#chefLink").addEventListener("click", openPin);
+$("#pinForm").addEventListener("submit", e => { e.preventDefault(); tryPin(); });
+$("#pinClose").addEventListener("click", closePin);
+pinOverlay.addEventListener("click", e => { if (e.target === pinOverlay) closePin(); });
+$("#chefClose").addEventListener("click", closeChef);
+$("#chefPrint").addEventListener("click", () => window.print());
+
+chefBody.addEventListener("input", e => {
+  if (e.target.id !== "eventDate") return;
+  const d = parseISODate(e.target.value);
+  if (!d) return;
+  eventDate = d;
+  updateEventUI();
+  const url = $("#shareUrl");
+  if (url) url.textContent = shareUrl();
+});
+
+chefBody.addEventListener("change", e => {
+  if (e.target.id === "editorCat") {
+    const box = $("#editorNewCat");
+    if (box) box.hidden = e.target.value !== "__new";
+    return;
+  }
+  if (e.target.id === "shareMenu") {
+    shareMenu = e.target.value;
+    const url = $("#shareUrl");
+    if (url) url.textContent = shareUrl();
+  }
+});
+
+chefBody.addEventListener("toggle", e => {
+  if (e.target.classList && e.target.classList.contains("chef-editor")) {
+    editorOpen = e.target.open;
+  }
+}, true);
+
+chefBody.addEventListener("submit", e => {
+  const form = e.target.closest("#editorForm");
+  if (!form) return;
+  e.preventDefault();
+
+  const data = new FormData(form);
+  const type = form.dataset.type;
+
+  if (type === "cat") {
+    const cat = CATEGORIES.find(c => c.id === editorState?.id);
+    if (!cat) return;
+    const name = String(data.get("catName") || "").trim();
+    if (!name) return alert("Bitte einen Kategorienamen eingeben.");
+    cat.name = name;
+    cat.sub = String(data.get("catSub") || "").trim();
+    cat.kitchen = data.get("catKitchen") === "asia" ? "asia" : "trattoria";
+    afterEdit();
+    return;
+  }
+
+  const name = String(data.get("name") || "").trim();
+  if (!name) return alert("Bitte einen Gerichtnamen eingeben.");
+
+  let catId = String(data.get("cat") || "");
+  let cat = CATEGORIES.find(c => c.id === catId);
+
+  if (catId === "__new") {
+    const newName = String(data.get("newCatName") || "").trim();
+    if (!newName) return alert("Bitte einen Namen für die neue Kategorie eingeben.");
+    const kitchen = data.get("newCatKitchen") === "asia" ? "asia" : "trattoria";
+    cat = {
+      id: uniqueId(newName, CATEGORIES.map(c => c.id)),
+      num: String(CATEGORIES.length + 1).padStart(2, "0"),
+      kitchen,
+      name: newName,
+      sub: String(data.get("newCatSub") || "").trim(),
+      dishes: []
+    };
+    CATEGORIES.push(cat);
+  }
+  if (!cat) return alert("Bitte eine Kategorie wählen.");
+
+  const diet = ["meat", "veg", "vegan"].includes(String(data.get("diet"))) ? String(data.get("diet")) : "veg";
+  const ing = String(data.get("ing") || "").split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+  const prep = String(data.get("prep") || "").split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+  const editing = form.dataset.id ? dishById[form.dataset.id] : null;
+
+  if (editing) {
+    editing.name = name;
+    editing.desc = String(data.get("desc") || "").trim();
+    editing.diet = diet;
+    editing.ing = ing;
+    editing.prep = prep;
+    const oldCat = CATEGORIES.find(c => c.dishes.includes(editing));
+    if (oldCat && oldCat !== cat) {
+      oldCat.dishes = oldCat.dishes.filter(x => x !== editing);
+      cat.dishes.push(editing);
+    }
+  } else {
+    cat.dishes.push({
+      id: uniqueId(name, ALL_DISHES.map(d => d.id)),
+      emoji: "",
+      name,
+      diet,
+      desc: String(data.get("desc") || "").trim(),
+      ing,
+      prep
+    });
+  }
+
+  afterEdit();
+});
+
+chefBody.addEventListener("click", async e => {
+  if (e.target.id === "copyLink") {
+    const ok = await copyText(shareUrl());
+    const hint = $("#copyOk");
+    if (hint) {
+      hint.hidden = false;
+      setTimeout(() => { hint.hidden = true; }, 2200);
+    }
+    if (!ok) window.prompt("Link kopieren:", shareUrl());
+    return;
+  }
+
+  const btn = e.target.closest("[data-editor]");
+  if (!btn) return;
+  const action = btn.dataset.editor;
+  const id = btn.dataset.id;
+
+  if (action === "new") {
+    const first = CATEGORIES[0];
+    editorState = {
+      type: "dish",
+      mode: "new",
+      catId: (first && first.id) || "__new",
+      kitchen: first ? kitchenOf(first) : (MENU_MODE === "asia" ? "asia" : "trattoria")
+    };
+    editorOpen = true;
+    refreshChef();
+    return;
+  }
+  if (action === "dish-new") {
+    const cat = CATEGORIES.find(c => c.id === btn.dataset.cat);
+    editorState = {
+      type: "dish",
+      mode: "new",
+      catId: (cat && cat.id) || (CATEGORIES[0] && CATEGORIES[0].id) || "__new",
+      kitchen: cat ? kitchenOf(cat) : (MENU_MODE === "asia" ? "asia" : "trattoria")
+    };
+    editorOpen = true;
+    refreshChef();
+    return;
+  }
+  if (action === "cancel") {
+    editorState = null;
+    editorOpen = true;
+    refreshChef();
+    return;
+  }
+  if (action === "export") {
+    exportHTML();
+    return;
+  }
+  if (action === "dish-edit") {
+    if (!dishById[id]) return;
+    editorState = { type: "dish", mode: "edit", id };
+    editorOpen = true;
+    refreshChef();
+    return;
+  }
+  if (action === "dish-del") {
+    const d = dishById[id];
+    if (!d) return;
+    if (!confirm(`„${d.name}“ wirklich löschen?`)) return;
+    const cat = CATEGORIES.find(c => c.dishes.includes(d));
+    if (cat) cat.dishes = cat.dishes.filter(x => x !== d);
+    afterEdit();
+    return;
+  }
+  if (action === "cat-edit") {
+    if (!CATEGORIES.some(c => c.id === id)) return;
+    editorState = { type: "cat", id };
+    editorOpen = true;
+    refreshChef();
+    return;
+  }
+  if (action === "cat-del") {
+    const cat = CATEGORIES.find(c => c.id === id);
+    if (!cat) return;
+    if (!confirm(`Kategorie „${cat.name}“ mit ${cat.dishes.length} Gerichten löschen?`)) return;
+    CATEGORIES.splice(CATEGORIES.indexOf(cat), 1);
+    afterEdit();
+  }
+});
+
+/* Versteckter Zugang: 5× auf das Logo tippen */
+let brandTaps = 0;
+let brandTimer;
+$("#brandBtn").addEventListener("click", () => {
+  brandTaps += 1;
+  clearTimeout(brandTimer);
+  brandTimer = setTimeout(() => { brandTaps = 0; }, 1400);
+  if (brandTaps >= 5) {
+    brandTaps = 0;
+    openPin();
+  }
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    if (pinOverlay.classList.contains("is-open")) closePin();
+    else if (chefOverlay.classList.contains("is-open")) closeChef();
+    else if (overlay.classList.contains("is-open")) closeCart();
+  }
+  if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "l") {
+    e.preventDefault();
+    openPin();
+  }
+});
+
+/* ---------- Start ---------- */
+
+function parseISODate(value) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value || "");
+  if (!m) return null;
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+function toISO(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function eventLabel() {
+  const wd = eventDate.toLocaleDateString("de-DE", { weekday: "short" }).replace(".", "");
+  const dd = String(eventDate.getDate()).padStart(2, "0");
+  const mm = String(eventDate.getMonth() + 1).padStart(2, "0");
+  return `${wd} ${dd}.${mm}.`;
+}
+
+function shareUrl() {
+  const base = location.href.split("?")[0].split("#")[0];
+  return `${base}?menu=${shareMenu}&date=${toISO(eventDate)}`;
+}
+
+function updateEventUI() {
+  const label = eventLabel();
+  $("#clipLine").textContent = `${label} · ${CLIP_TIME}`;
+  $("#receiptWhen").textContent = `für ${label}`;
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch {}
+    ta.remove();
+    return ok;
+  }
+}
+
+const urlDate = parseISODate(new URLSearchParams(location.search).get("date"));
+let eventDate = urlDate || (() => {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + 1);
+  return d;
+})();
+
+updateEventUI();
+renderAll();
+
+</script>
+</body>
+</html>
